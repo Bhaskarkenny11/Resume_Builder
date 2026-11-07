@@ -1,0 +1,442 @@
+import { CountryPresetConfig, CountryPresetId, ResumeContent, ResumeStyleSettings } from '../types/resume';
+
+export const COUNTRY_PRESETS: Record<CountryPresetId, CountryPresetConfig> = {
+  us_ca: {
+    id: 'us_ca',
+    name: 'US & Canada',
+    flag: 'US',
+    paperSize: 'letter',
+    paperDimensions: {
+      widthMm: 215.9,
+      heightMm: 279.4,
+      aspectRatio: 215.9 / 279.4, // ~0.7727
+    },
+    features: {
+      photoUpload: false,
+      birthDate: false,
+      birthPlace: false,
+      nationality: false,
+      maritalStatus: false,
+      gender: false,
+      visaStatus: false,
+      drivingLicense: false,
+      personalStatement: true,
+      cefrLanguageGrid: false,
+    },
+    description: 'Letter format (8.5 x 11 in). Strict ATS compliance without headshots or sensitive personal attributes.',
+  },
+  uk_eu: {
+    id: 'uk_eu',
+    name: 'UK & Europe',
+    flag: 'EU',
+    paperSize: 'a4',
+    paperDimensions: {
+      widthMm: 210,
+      heightMm: 297,
+      aspectRatio: 210 / 297, // ~0.707
+    },
+    features: {
+      photoUpload: false,
+      birthDate: false,
+      birthPlace: false,
+      nationality: false,
+      maritalStatus: false,
+      gender: false,
+      visaStatus: false,
+      drivingLicense: false,
+      personalStatement: true,
+      cefrLanguageGrid: true,
+    },
+    description: 'A4 format (210 x 297 mm). Includes profile statement and CEFR language framework (A1-C2).',
+  },
+  dach: {
+    id: 'dach',
+    name: 'Germany / DACH',
+    flag: 'DE',
+    paperSize: 'a4',
+    paperDimensions: {
+      widthMm: 210,
+      heightMm: 297,
+      aspectRatio: 210 / 297,
+    },
+    features: {
+      photoUpload: true,
+      birthDate: true,
+      birthPlace: true,
+      nationality: true,
+      maritalStatus: true,
+      gender: false,
+      visaStatus: false,
+      drivingLicense: true,
+      personalStatement: false,
+      cefrLanguageGrid: true,
+    },
+    description: 'Standard German Lebenslauf on A4. Includes professional headshot, birth date, and nationality.',
+  },
+  gulf: {
+    id: 'gulf',
+    name: 'Middle East / Gulf',
+    flag: 'AE',
+    paperSize: 'a4',
+    paperDimensions: {
+      widthMm: 210,
+      heightMm: 297,
+      aspectRatio: 210 / 297,
+    },
+    features: {
+      photoUpload: true,
+      birthDate: true,
+      birthPlace: false,
+      nationality: true,
+      maritalStatus: true,
+      gender: true,
+      visaStatus: true,
+      drivingLicense: true,
+      personalStatement: true,
+      cefrLanguageGrid: false,
+    },
+    description: 'A4 format optimized for UAE, Saudi Arabia, and GCC markets with visa status and license fields.',
+  },
+};
+
+export const COLOR_PALETTES = [
+  { name: 'None / Neutral', hex: 'none', ring: 'ring-slate-400', isNone: true },
+  { name: 'Slate Gray', hex: '#475569', ring: 'ring-slate-600' },
+  { name: 'Dark Slate Teal', hex: '#334e68', ring: 'ring-slate-700' },
+  { name: 'Sage Teal', hex: '#4a7c82', ring: 'ring-teal-700' },
+  { name: 'Teal Ocean', hex: '#25839b', ring: 'ring-teal-600' },
+  { name: 'Ocean Blue', hex: '#2b6cb0', ring: 'ring-blue-700' },
+  { name: 'Navy Blue', hex: '#1e3a8a', ring: 'ring-blue-900' },
+  { name: 'Royal Indigo', hex: '#2563eb', ring: 'ring-blue-600' },
+  { name: 'Sky Blue', hex: '#0284c7', ring: 'ring-sky-600' },
+  { name: 'Light Cyan', hex: '#06b6d4', ring: 'ring-cyan-500' },
+  { name: 'Baby Blue', hex: '#38bdf8', ring: 'ring-sky-400' },
+  { name: 'Deep Purple', hex: '#581c87', ring: 'ring-purple-900' },
+  { name: 'Wine / Plum', hex: '#701a75', ring: 'ring-fuchsia-900' },
+  { name: 'Mauve Rose', hex: '#9d4e73', ring: 'ring-pink-700' },
+  { name: 'Hot Pink', hex: '#be185d', ring: 'ring-pink-600' },
+  { name: 'Coral Salmon', hex: '#f43f5e', ring: 'ring-rose-500' },
+];
+
+export const FONT_OPTIONS = [
+  { id: 'inter', name: 'Inter', category: 'Modern Sans' },
+  { id: 'jakarta', name: 'Plus Jakarta', category: 'Crisp Tech' },
+  { id: 'outfit', name: 'Outfit', category: 'Clean Geometric' },
+  { id: 'merriweather', name: 'Merriweather', category: 'Classic Editorial' },
+  { id: 'roboto', name: 'Roboto', category: 'Standard Clean' },
+  { id: 'mono', name: 'JetBrains Mono', category: 'Tech Monospace' },
+];
+
+export const ACTION_VERBS_BY_CATEGORY: Record<string, string[]> = {
+  'Leadership & Management': [
+    'Spearheaded', 'Orchestrated', 'Chaired', 'Directed', 'Empowered',
+    'Cultivated', 'Mentored', 'Championed', 'Mobilized', 'Guided',
+    'Supervised', 'Delegated', 'Restructured', 'Navigated', 'Facilitated'
+  ],
+  'Technical & Engineering': [
+    'Architected', 'Engineered', 'Refactored', 'Deployed', 'Automated',
+    'Configured', 'Containerized', 'Benchmarked', 'Integrated', 'Debugged',
+    'Overhauled', 'Streamlined', 'Provisioned', 'Decoupled', 'Migrated'
+  ],
+  'Achievement & Results': [
+    'Accelerated', 'Amplified', 'Maximized', 'Outperformed', 'Generated',
+    'Reduced', 'Eliminated', 'Surpassed', 'Boosted', 'Capitalized',
+    'Secured', 'Scaled', 'Strengthened', 'Yielded', 'Halved'
+  ],
+  'Innovation & Creation': [
+    'Pioneered', 'Conceptualized', 'Designed', 'Authored', 'Devised',
+    'Instituted', 'Initiated', 'Formulated', 'Prototyped', 'Launched',
+    'Crafted', 'Modernized', 'Re-engineered', 'Transformed', 'Innovated'
+  ],
+  'Analysis & Problem Solving': [
+    'Synthesized', 'Diagnosed', 'Extracted', 'Audited', 'Investigated',
+    'Quantified', 'Scrutinized', 'Evaluated', 'Forecasted', 'Uncovered',
+    'Optimized', 'Resolved', 'Pinpointed', 'Standardized', 'Modeled'
+  ],
+  'Communication & Collaboration': [
+    'Negotiated', 'Advocated', 'Partnered', 'Co-authored', 'Articulated',
+    'Liaised', 'Unified', 'Conveyed', 'Educated', 'Fostered', 'Aligned'
+  ],
+};
+
+export const DEFAULT_STYLE: ResumeStyleSettings = {
+  templateId: 'modern_clean',
+  accentColor: '#1e40af',
+  fontFamily: 'inter',
+  fontSize: 9.5,
+  lineHeight: 1.4,
+  marginMm: 14,
+  showSectionIcons: true,
+  headerAlignment: 'left',
+  compactMode: false,
+  headerDetailsLayout: 'wrap',
+  headerSeparator: 'bullet',
+  headerIconStyle: 'plain',
+  sectionHeadingStyle: 'full_underline',
+  sectionCapitalization: 'uppercase',
+  sectionIconStyle: 'none',
+
+  // FlowCV Photo Customization (Image 4)
+  photoPosition: 'left',
+  photoSize: 'm',
+  photoGrayscale: false,
+  photoShapeType: 'circle',
+
+  // FlowCV Colors & Accent Targets (Image 3)
+  colorThemePlacement: 'full_page',
+  colorPaletteMode: 'single',
+  accentTargets: {
+    name: true,
+    jobTitle: true,
+    headings: true,
+    headingsLine: true,
+    headerIcons: false,
+    dotsBarsBubbles: false,
+    dates: false,
+    entryTitle: false,
+    entrySubtitle: false,
+    linkIcons: false,
+  },
+
+  // FlowCV Entry Layout (Image 1)
+  entryStructure: 'full_width',
+  dateLocationPosition: 'right',
+  subtitlePlacement: 'below_title',
+  locationPlacement: 'same_line',
+  subtitleFontStyle: 'italic',
+  dateFontStyle: 'regular',
+  locationFontStyle: 'regular',
+  indentBody: false,
+  listStyle: 'bullet',
+  dateLocationOrder: 'date_location',
+
+  // FlowCV Section Customizations (Images 2 & 5)
+  displaySummaryInHeader: false,
+  showSummaryHeading: true,
+  workExperienceOrder: 'title_subtitle',
+  groupPromotions: false,
+  experienceLayout: 'rows',
+  experienceColumns: 1,
+  educationOrder: 'title_subtitle',
+  educationLayout: 'rows',
+  educationColumns: 1,
+  projectsLayout: 'rows',
+  projectsColumns: 1,
+  skillsLayout: 'bubble',
+  skillsColumns: 3,
+  skillsRowSpacing: 'spacious',
+  skillsStartWithBullet: false,
+  skillsSubinfoStyle: 'dash',
+  certificatesLayout: 'rows',
+  certificatesColumns: 2,
+  certificatesRowSpacing: 'tight',
+  languagesLayout: 'compact',
+  languagesColumns: 2,
+  languagesSeparator: 'bullet',
+  languagesSubinfoStyle: 'dash',
+  customSectionsLayout: 'rows',
+  customSectionsColumns: 1,
+};
+
+export const SAMPLE_RESUME_CONTENT: ResumeContent = {
+  personal: {
+    fullName: 'Alex Vance',
+    jobTitle: 'Senior Full Stack & Cloud Architect',
+    email: 'alex.vance@techstudio.dev',
+    phone: '+1 (415) 890-2411',
+    location: 'San Francisco, CA',
+    website: 'https://alexvance.dev',
+    linkedin: 'linkedin.com/in/alexvance-cloud',
+    github: 'github.com/alexvance',
+    nationality: 'United States',
+    visaStatus: 'Citizen',
+    drivingLicense: 'Full Class C',
+  },
+  summary:
+    'Innovative Senior Solutions Architect with 8+ years of engineering resilient distributed systems, enterprise microservices, and reactive web applications. Track record of spearheading cloud migrations that reduced operational expenditures by 38% while scaling to 15M+ monthly active users. Passionate about client-side performance, zero-trust security, and mentoring high-velocity engineering teams.',
+  experience: [
+    {
+      id: 'exp-1',
+      company: 'Apex Cloud Systems',
+      role: 'Lead Cloud Architect & Staff Engineer',
+      location: 'San Francisco, CA',
+      startDate: '2021-03',
+      endDate: '',
+      current: true,
+      description:
+        '• Architected event-driven microservices architecture servicing 12M+ concurrent requests with 99.995% uptime availability.\n• Spearheaded Kubernetes cluster optimization, slashing cloud compute costs by 34% ($420k/yr savings).\n• Mentored 14 senior and staff software engineers across 3 time zones; introduced automated end-to-end canary deployments.\n• Re-engineered database sharding strategy across PostgreSQL clusters, reducing peak p99 query latency from 850ms to 42ms.',
+    },
+    {
+      id: 'exp-2',
+      company: 'Veloce Data Labs',
+      role: 'Senior Software Engineer',
+      location: 'Austin, TX',
+      startDate: '2018-06',
+      endDate: '2021-02',
+      current: false,
+      description:
+        '• Engineered real-time telemetry analytics ingestion pipeline processing over 2.5 billion daily events using Go and Apache Kafka.\n• Authored reusable TypeScript component system adopted across 8 distinct internal SaaS products, boosting delivery velocity by 40%.\n• Collaborated with SOC-2 compliance auditors to implement zero-trust cryptographic role-based access control (RBAC).',
+    },
+    {
+      id: 'exp-3',
+      company: 'Hyperion Interactive',
+      role: 'Full Stack Engineer',
+      location: 'Seattle, WA',
+      startDate: '2016-08',
+      endDate: '2018-05',
+      current: false,
+      description:
+        '• Developed responsive single-page web applications with React, GraphQL, and Node.js for Fortune 500 retail clients.\n• Automated CI/CD pipelines with GitHub Actions, reducing release cycle time from 3 hours to under 8 minutes.',
+    },
+    {
+      id: 'exp-4',
+      company: 'CloudStudio Technologies',
+      role: 'Software Engineering Intern',
+      location: 'Seattle, WA',
+      startDate: '2015-06',
+      endDate: '2016-04',
+      current: false,
+      description:
+        '• Engineered WebSocket notification daemon supporting 120k concurrent connected dashboard users.\n• Authored automated unit test suites expanding core codebase test coverage from 68% to 92%.',
+    },
+  ],
+  education: [
+    {
+      id: 'edu-1',
+      institution: 'University of Washington',
+      degree: 'B.S. in Computer Science & Software Engineering',
+      fieldOfStudy: 'Distributed Systems & Algorithms',
+      location: 'Seattle, WA',
+      startDate: '2012-09',
+      endDate: '2016-06',
+      current: false,
+      grade: '3.92 GPA — Magna Cum Laude',
+      description: 'Dean\'s Honor List (all semesters). Led UW ACM competitive programming team.',
+    },
+    {
+      id: 'edu-2',
+      institution: 'Stanford Center for Professional Development',
+      degree: 'Graduate Certificate in Distributed Cloud Architectures',
+      fieldOfStudy: 'Cloud Computing & Advanced Networking',
+      location: 'Stanford, CA',
+      startDate: '2017-09',
+      endDate: '2018-06',
+      current: false,
+      grade: 'Distinction',
+      description: 'Focus on consensus algorithms, eBPF telemetry, and zero-trust security architecture.',
+    },
+  ],
+  skills: [
+    { id: 'sk-1', name: 'TypeScript / React', category: 'Frontend', level: 'Expert' },
+    { id: 'sk-2', name: 'Next.js & Tailwind CSS', category: 'Frontend', level: 'Expert' },
+    { id: 'sk-3', name: 'Node.js & Go', category: 'Backend', level: 'Expert' },
+    { id: 'sk-4', name: 'PostgreSQL & Redis', category: 'Database', level: 'Advanced' },
+    { id: 'sk-5', name: 'AWS & Kubernetes (EKS)', category: 'Cloud/DevOps', level: 'Expert' },
+    { id: 'sk-6', name: 'Docker & Terraform', category: 'Cloud/DevOps', level: 'Advanced' },
+    { id: 'sk-7', name: 'GraphQL & REST APIs', category: 'Architecture', level: 'Expert' },
+    { id: 'sk-8', name: 'System Design & Distributed Data', category: 'Architecture', level: 'Expert' },
+  ],
+  projects: [
+    {
+      id: 'proj-1',
+      title: 'KubePulse — Cluster Telemetry Monitor',
+      subtitle: 'Open Source Kubernetes Visualizer',
+      link: 'https://kubepulse.io',
+      githubUrl: 'https://github.com/alexvance/kubepulse',
+      technologies: ['Go', 'eBPF', 'React', 'WebSockets', 'Tailwind'],
+      startDate: '2023-01',
+      endDate: 'Present',
+      description:
+        '• Built lightweight zero-overhead node agent monitoring pod CPU/memory thrashing in real-time.\n• Starred by 3,400+ developers on GitHub with active production usage in over 40 enterprise organizations.',
+    },
+    {
+      id: 'proj-2',
+      title: 'FastEdge — Distributed Edge Cache Layer',
+      subtitle: 'Ultra-low Latency Key-Value Store',
+      link: 'https://fastedge.dev',
+      technologies: ['Rust', 'WebAssembly', 'Cloudflare Workers'],
+      startDate: '2022-04',
+      endDate: '2022-11',
+      description:
+        '• Implemented decentralized cache replication using CRDTs with sub-5ms round-trip edge response times globally.',
+    },
+    {
+      id: 'proj-3',
+      title: 'NetMesh — Zero-Trust Service Mesh',
+      subtitle: 'eBPF-Powered Transparent Network Proxy',
+      link: 'https://netmesh.dev',
+      technologies: ['C', 'eBPF', 'Go', 'Linux Kernel'],
+      startDate: '2021-08',
+      endDate: '2022-03',
+      description:
+        '• Routed kernel-level L4/L7 TCP traffic without userspace context-switch overhead, achieving 3.2x throughput over standard iptables.',
+    },
+  ],
+  certifications: [
+    {
+      id: 'cert-1',
+      name: 'AWS Certified Solutions Architect – Professional',
+      issuer: 'Amazon Web Services',
+      issueDate: '2023-05',
+      expiryDate: '2026-05',
+      credentialId: 'AWS-PSA-991284',
+      url: 'https://aws.amazon.com/verification',
+    },
+    {
+      id: 'cert-2',
+      name: 'Certified Kubernetes Administrator (CKA)',
+      issuer: 'Cloud Native Computing Foundation (CNCF)',
+      issueDate: '2022-08',
+      expiryDate: '2025-08',
+      credentialId: 'CKA-883011',
+    },
+    {
+      id: 'cert-3',
+      name: 'HashiCorp Certified: Terraform Associate',
+      issuer: 'HashiCorp',
+      issueDate: '2022-01',
+      expiryDate: '2025-01',
+      credentialId: 'HC-TA-449102',
+    },
+    {
+      id: 'cert-4',
+      name: 'Certified Information Systems Security Professional (CISSP)',
+      issuer: '(ISC)²',
+      issueDate: '2021-04',
+      expiryDate: '2024-04',
+      credentialId: 'CISSP-771920',
+    },
+  ],
+  languages: [
+    { id: 'lang-1', language: 'English', proficiency: 'Native / Bilingual', cefrLevel: 'C2' },
+    { id: 'lang-2', language: 'German', proficiency: 'Professional Working', cefrLevel: 'B2' },
+    { id: 'lang-3', language: 'Spanish', proficiency: 'Conversational', cefrLevel: 'B1' },
+  ],
+  customSections: [
+    {
+      id: 'custom-1',
+      title: 'Publications & Speaking',
+      items: [
+        {
+          id: 'citem-1',
+          title: 'Keynote Speaker: "Zero-Latency Client Architectures"',
+          subtitle: 'QCon San Francisco 2023',
+          date: '2023-11',
+          description: 'Addressed audience of 1,200+ engineers discussing browser IndexedDB, Web Workers, and local-first data sync patterns.',
+        },
+      ],
+    },
+  ],
+  sectionOrder: [
+    { id: 'sec-personal', type: 'personal', title: 'Personal Details', enabled: true },
+    { id: 'sec-summary', type: 'summary', title: 'Professional Summary', enabled: true },
+    { id: 'sec-experience', type: 'experience', title: 'Work Experience', enabled: true },
+    { id: 'sec-education', type: 'education', title: 'Education', enabled: true },
+    { id: 'sec-skills', type: 'skills', title: 'Skills & Proficiencies', enabled: true },
+    { id: 'sec-projects', type: 'projects', title: 'Projects & Open Source', enabled: true },
+    { id: 'sec-certifications', type: 'certifications', title: 'Certifications', enabled: true },
+    { id: 'sec-languages', type: 'languages', title: 'Languages', enabled: true },
+    { id: 'sec-custom', type: 'custom', title: 'Custom Sections', enabled: true },
+  ],
+  style: DEFAULT_STYLE,
+};
