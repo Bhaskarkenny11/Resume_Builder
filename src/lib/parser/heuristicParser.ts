@@ -99,17 +99,18 @@ function segmentSections(lines: string[]): ExtractedSections {
     otherLines: [],
   };
 
-  type SectionKey = keyof Omit<ExtractedSections, 'rawHeader' | 'otherLines'> | null;
+  type SectionKey = keyof Omit<ExtractedSections, 'rawHeader'> | null;
   let currentSection: SectionKey = null;
 
   const headerRegexes: { key: SectionKey; regex: RegExp }[] = [
     { key: 'summaryLines', regex: /^(summary|professional summary|profile|about me|objective|executive summary)/i },
     { key: 'experienceLines', regex: /^(experience|work experience|employment history|professional experience|work history)/i },
     { key: 'educationLines', regex: /^(education|academic background|qualifications|academic history)/i },
-    { key: 'skillsLines', regex: /^(skills|technical skills|competencies|core competencies|technologies|tools)/i },
+    { key: 'skillsLines', regex: /^(skills|technical skills|competencies|core competencies|technologies|tools|skills & proficiencies)/i },
     { key: 'projectsLines', regex: /^(projects|personal projects|key projects|academic projects)/i },
     { key: 'certificationsLines', regex: /^(certifications|certificates|licenses|accreditations)/i },
     { key: 'languagesLines', regex: /^(languages|language skills|language proficiency)/i },
+    { key: 'otherLines', regex: /^(personal details|personal information|personal data|declaration|additional details|additional information|hobbies|interests|interests & hobbies)/i },
   ];
 
   for (let i = 0; i < lines.length; i++) {
@@ -277,6 +278,13 @@ function extractPersonalDetails(headerLines: string[], allLines: string[]) {
     }
   }
 
+  // Date of Birth
+  const dobMatch = fullText.match(/(?:date\s*of\s*birth|dob|birth\s*date)\s*[:—\-–]?\s*([0-9]{1,2}(?:st|nd|rd|th)?[\s\/\-\.][A-Za-z]+[\s\/\-\.][0-9]{4}|[0-9]{1,2}[\/\-\.][0-9]{1,2}[\/\-\.][0-9]{2,4}|[A-Za-z]+[\s\/\-\.][0-9]{1,2}(?:st|nd|rd|th)?[\s\/\-\.,]+[0-9]{4}|[0-9]{4}[\/\-\.][0-9]{1,2}[\/\-\.][0-9]{1,2}|\d{1,2}\s+[A-Za-z]+\s+\d{4})/i);
+  let birthDate = '';
+  if (dobMatch) {
+    birthDate = dobMatch[1].trim();
+  }
+
   return {
     fullName,
     jobTitle,
@@ -286,6 +294,7 @@ function extractPersonalDetails(headerLines: string[], allLines: string[]) {
     website,
     linkedin,
     github,
+    birthDate: birthDate || undefined,
   };
 }
 
@@ -423,9 +432,16 @@ function extractEducation(lines: string[]): EducationItem[] {
     }
   };
 
+  const isPersonalOrNoiseRegex = /\b(date of birth|dob|birth\s*date|father'?s?\s*name|mother'?s?\s*name|marital\s*status|nationality|gender|blood\s*group|religion|languages?\s*known|permanent\s*address|declaration|hobbies|interests?|passport)\b/i;
+
   for (const rawLine of lines) {
     const line = rawLine.trim();
     if (!line) continue;
+
+    // Filter out personal attributes, declarations, and profile noise from education
+    if (isPersonalOrNoiseRegex.test(line)) {
+      continue;
+    }
 
     // Check for date in the line
     const dateMatch = line.match(dateRangeRegex);
@@ -463,6 +479,15 @@ function extractEducation(lines: string[]): EducationItem[] {
     const hasDegree = degreeKeywordsRegex.test(cleanText);
     const hasInst = institutionKeywordsRegex.test(cleanText);
     const hasDate = Boolean(sDate);
+
+    // An item MUST have a degree keyword OR an institution keyword to be a valid education item
+    if (!hasDegree && !hasInst) {
+      if (currentItem && (sDate || grade) && !cleanText) {
+        if (sDate) { currentItem.startDate = sDate; currentItem.endDate = eDate; }
+        if (grade) currentItem.grade = grade;
+      }
+      continue;
+    }
 
     const isNewItem = (hasDegree && currentItem && Boolean(currentItem.degree || currentItem.institution)) ||
                       (hasInst && currentItem && Boolean(currentItem.institution && currentItem.degree)) ||
