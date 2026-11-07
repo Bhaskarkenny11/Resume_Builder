@@ -31,7 +31,7 @@ export const ProfessionalTemplate: React.FC<TemplateProps> = ({ resume }) => {
   const sidebarBg = style.accentColor && style.accentColor !== 'none' ? style.accentColor : '#064e3b';
   const isPhotoVisible = personal.showPhoto !== false;
   const photoSrc = personal.photoUrl || DEFAULT_AVATAR_URL;
-  const photoShape: PhotoShapeType = style.photoShapeType || (personal.photoShape as any) || 'circle';
+  const photoShape: PhotoShapeType = (personal.photoShape as any) || style.photoShapeType || 'circle';
 
   const shapeClass = {
     circle: 'rounded-full aspect-square',

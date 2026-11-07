@@ -20,17 +20,17 @@ import {
 } from 'lucide-react';
 
 export const PersonalDetailsForm: React.FC = () => {
-  const { currentResume, updatePersonalDetails, updateSummary } = useResumeStore();
+  const { currentResume, updatePersonalDetails, updateStyle, updateSummary } = useResumeStore();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   if (!currentResume) return null;
 
-  const { personal, summary } = currentResume.content;
+  const { personal, summary, style } = currentResume.content;
   const presetConfig = COUNTRY_PRESETS[currentResume.country_preset] || COUNTRY_PRESETS.us_ca;
   const features = presetConfig.features;
 
   const isPhotoVisible = Boolean(personal.photoUrl && personal.showPhoto !== false);
-  const photoShape = personal.photoShape || 'circle';
+  const photoShape = personal.photoShape || (style?.photoShapeType as any) || 'circle';
 
   const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -64,6 +64,7 @@ export const PersonalDetailsForm: React.FC = () => {
 
   const setPhotoShape = (shape: 'circle' | 'rounded' | 'square') => {
     updatePersonalDetails({ photoShape: shape });
+    updateStyle({ photoShapeType: shape });
   };
 
   return (

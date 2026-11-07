@@ -56,7 +56,7 @@ export const ResumeHeaderRenderer: React.FC<ResumeHeaderRendererProps> = ({
   // Photo settings
   const isPhotoVisible = personal.showPhoto !== false;
   const photoSource = personal.photoUrl || DEFAULT_AVATAR_URL;
-  const photoShape: PhotoShapeType = style.photoShapeType || (personal.photoShape as any) || 'circle';
+  const photoShape: PhotoShapeType = (personal.photoShape as any) || style.photoShapeType || 'circle';
   const photoSize: PhotoSize = style.photoSize || 'm';
   const photoPosition: PhotoPosition = style.photoPosition || 'left';
   const photoGrayscale = style.photoGrayscale || false;

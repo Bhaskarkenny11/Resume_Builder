@@ -81,7 +81,7 @@ export const ResumePdfDocument: React.FC<ResumePdfDocumentProps> = ({ resume }) 
     photo: {
       width: style.photoSize === 'xs' ? 36 : style.photoSize === 's' ? 44 : style.photoSize === 'l' ? 64 : style.photoSize === 'xl' ? 74 : 54,
       height: style.photoSize === 'xs' ? 36 : style.photoSize === 's' ? 44 : style.photoSize === 'l' ? 64 : style.photoSize === 'xl' ? 74 : 54,
-      borderRadius: (style.photoShapeType || personal.photoShape) === 'circle' ? 37 : (style.photoShapeType || personal.photoShape) === 'square' ? 0 : 8,
+      borderRadius: (personal.photoShape || style.photoShapeType) === 'circle' ? 37 : (personal.photoShape || style.photoShapeType) === 'square' ? 0 : 8,
       marginLeft: isCenter ? 0 : 10,
       marginBottom: isCenter ? 6 : 0,
     },
