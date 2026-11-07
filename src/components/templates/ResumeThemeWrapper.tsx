@@ -51,13 +51,14 @@ export const ResumeThemeWrapper: React.FC<ResumeThemeWrapperProps> = ({
 
   if (themePlacement === 'full_page') {
     backgroundStyle.backgroundColor = hexToRgba(effectiveAccent, 0.045);
-    backgroundStyle.borderTop = `5px solid ${effectiveAccent}`;
+    backgroundStyle.border = 'none';
   } else if (themePlacement === 'border') {
     backgroundStyle.backgroundColor = '#ffffff';
     backgroundStyle.border = `4px solid ${effectiveAccent}`;
   } else {
     // 'header'
     backgroundStyle.backgroundColor = '#ffffff';
+    backgroundStyle.border = 'none';
   }
 
   return (

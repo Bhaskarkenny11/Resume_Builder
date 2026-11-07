@@ -777,9 +777,10 @@ export const StyleControls: React.FC = () => {
                 : 'border-slate-200 bg-white text-slate-600 hover:border-slate-300'
             }`}
           >
-            <div className="w-10 h-14 rounded-xs border border-indigo-400 bg-indigo-100/60 p-1 flex flex-col justify-start gap-1">
-              <div className="w-full h-1.5 bg-indigo-400 rounded-2xs" />
-              <div className="w-3/4 h-1 bg-indigo-300 rounded-2xs" />
+            <div className="w-10 h-14 rounded-xs border border-indigo-300 bg-indigo-50/80 p-1 flex flex-col justify-start gap-1">
+              <div className="w-full h-1 bg-indigo-300/80 rounded-2xs mt-1" />
+              <div className="w-3/4 h-1 bg-indigo-200 rounded-2xs" />
+              <div className="w-1/2 h-1 bg-indigo-200 rounded-2xs" />
             </div>
             <span className="text-xs font-semibold">Full Page</span>
           </button>
