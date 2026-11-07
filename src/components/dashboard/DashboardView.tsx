@@ -239,18 +239,18 @@ export const DashboardView: React.FC = () => {
       {/* 1. NAVBAR (Linear / Vercel Design System) */}
       <header className="sticky top-0 z-30 bg-[#09090b]/80 backdrop-blur-xl border-b border-zinc-800/80 px-4 sm:px-8 py-3">
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
-          {/* Left: Logo Icon + "Novafolio" Semi-Bold (Triple-click logo opens Admin) */}
+          {/* Left: Logo Icon + "ProFile" Semi-Bold (Triple-click logo opens Admin) */}
           <div 
             onClick={handleLogoClick}
             className="flex items-center gap-3 cursor-pointer select-none group"
-            title="Novafolio (Client-Side Privacy)"
+            title="ProFile (Client-Side Privacy)"
           >
             <div className="w-8 h-8 rounded-lg bg-zinc-900 border border-zinc-800 text-zinc-200 flex items-center justify-center shadow-xs group-hover:border-zinc-700 transition-colors">
               <FileText className="w-4 h-4 text-zinc-300" />
             </div>
             <div className="flex items-center gap-2.5">
               <span className="font-semibold text-sm sm:text-base text-zinc-100 tracking-tight">
-                Novafolio
+                ProFile
               </span>
               <span className="text-[11px] font-mono text-zinc-400 bg-zinc-900/90 border border-zinc-800 px-2.5 py-0.5 rounded-full flex items-center gap-1.5">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />

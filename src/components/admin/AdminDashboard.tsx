@@ -274,7 +274,7 @@ export const AdminDashboard: React.FC = () => {
               <div>
                 <div className="flex items-center gap-1.5">
                   <h1 className="text-sm font-bold tracking-tight text-zinc-100">
-                    Novafolio Admin Console
+                    ProFile Admin Console
                   </h1>
                   <span className="px-1.5 py-0.2 rounded text-[10px] font-mono font-medium bg-emerald-950/60 text-emerald-400 border border-emerald-800/40">
                     Online
@@ -1005,7 +1005,7 @@ export const AdminDashboard: React.FC = () => {
                     Third-Party Analytics Integration
                   </h2>
                   <p className="text-xs text-zinc-400 mt-1">
-                    Connect Google Analytics 4, Umami, Plausible, or Cloudflare Web Analytics to monitor real production traffic alongside Novafolio's local telemetry.
+                    Connect Google Analytics 4, Umami, Plausible, or Cloudflare Web Analytics to monitor real production traffic alongside ProFile's local telemetry.
                   </p>
                 </div>
 
