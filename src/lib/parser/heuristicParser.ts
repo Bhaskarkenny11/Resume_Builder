@@ -395,94 +395,158 @@ function extractExperience(lines: string[], fallbackRole?: string): ExperienceIt
 
 function extractEducation(lines: string[]): EducationItem[] {
   const items: EducationItem[] = [];
-  const degreeRegex = /(bachelor|master|b\.s\.|m\.s\.|ph\.d\.|b\.tech|m\.tech|bba|mba|associate|degree|diploma)/i;
-  const dateRegex = /(\b(?:jan[a-z]*\.?|feb[a-z]*\.?|mar[a-z]*\.?|apr[a-z]*\.?|may|jun[a-z]*\.?|jul[a-z]*\.?|aug[a-z]*\.?|sep[a-z]*\.?|oct[a-z]*\.?|nov[a-z]*\.?|dec[a-z]*\.?|\d{1,2}\/)?\s*\d{4})\s*(?:–|—|-|to)\s*(\b(?:jan[a-z]*\.?|feb[a-z]*\.?|mar[a-z]*\.?|apr[a-z]*\.?|may|jun[a-z]*\.?|jul[a-z]*\.?|aug[a-z]*\.?|sep[a-z]*\.?|oct[a-z]*\.?|nov[a-z]*\.?|dec[a-z]*\.?|\d{1,2}\/)?\s*\d{4}|present|current)/i;
+
+  const degreeKeywordsRegex = /\b(bachelor|b\.?tech|b\.?e\.?|b\.?sc|b\.?com|b\.?a\.?|bba|bca|b\.?des|b\.?pharm|mbbs|master|m\.?tech|m\.?e\.?|m\.?sc|m\.?com|m\.?a\.?|mba|mca|m\.?des|m\.?pharm|md|ph\.?d|doctorate|associate|diploma|degree|intermediate|secondary|senior secondary|higher secondary|high school|school certificate|matriculation|ssc|hsc|puc|cbse|icse|10th|12th|class x|class xii|post graduate|undergraduate|graduate)\b/i;
+
+  const institutionKeywordsRegex = /\b(university|college|institute|school|academy|polytechnic|campus|vidyalaya|vidyapeeth|trust|faculty|department)\b/i;
+
+  const dateRangeRegex = /(\b(?:jan[a-z]*\.?|feb[a-z]*\.?|mar[a-z]*\.?|apr[a-z]*\.?|may|jun[a-z]*\.?|jul[a-z]*\.?|aug[a-z]*\.?|sep[a-z]*\.?|oct[a-z]*\.?|nov[a-z]*\.?|dec[a-z]*\.?|\d{1,2}\/)?\s*\d{4})\s*(?:–|—|-|to)\s*(\b(?:jan[a-z]*\.?|feb[a-z]*\.?|mar[a-z]*\.?|apr[a-z]*\.?|may|jun[a-z]*\.?|jul[a-z]*\.?|aug[a-z]*\.?|sep[a-z]*\.?|oct[a-z]*\.?|nov[a-z]*\.?|dec[a-z]*\.?|\d{1,2}\/)?\s*\d{4}|present|current)/i;
   const singleYearRegex = /\b(19\d{2}|20\d{2})\b/;
+  const gradeRegex = /\b(?:gpa|cgpa|percentage|score|marks|grade)?\s*[:=]?\s*(\d+(?:\.\d+)?\s*(?:\/\s*\d+|%)|\b(?:first class|distinction|magna cum laude|summa cum laude)\b)/i;
 
-  let currentEdu: Partial<EducationItem> | null = null;
+  let currentItem: Partial<EducationItem> | null = null;
 
-  for (const line of lines) {
-    const dateMatch = line.match(dateRegex);
-    let lineClean = line;
-    let sDate = '2018';
-    let eDate = '2022';
+  const finalizeCurrentItem = () => {
+    if (currentItem && (currentItem.degree || currentItem.institution)) {
+      items.push({
+        id: `edu-${items.length + 1}-${Date.now()}`,
+        degree: currentItem.degree || 'Degree / Qualification',
+        institution: currentItem.institution || 'University / Institute',
+        location: currentItem.location || '',
+        startDate: currentItem.startDate || '2018',
+        endDate: currentItem.endDate || '2022',
+        current: Boolean(currentItem.current),
+        grade: currentItem.grade || undefined,
+        description: currentItem.description || undefined,
+      });
+      currentItem = null;
+    }
+  };
+
+  for (const rawLine of lines) {
+    const line = rawLine.trim();
+    if (!line) continue;
+
+    // Check for date in the line
+    const dateMatch = line.match(dateRangeRegex);
+    let sDate = '';
+    let eDate = '';
+    let isCurrent = false;
+    let textWithoutDate = line;
+
     if (dateMatch) {
       sDate = dateMatch[1].trim();
       eDate = dateMatch[2].trim();
-      lineClean = line.replace(dateMatch[0], '').trim();
+      isCurrent = /present|current/i.test(eDate);
+      textWithoutDate = line.replace(dateMatch[0], '').trim();
     } else {
       const yearMatch = line.match(singleYearRegex);
       if (yearMatch) {
         sDate = yearMatch[0];
         eDate = yearMatch[0];
-        lineClean = line.replace(yearMatch[0], '').trim();
+        textWithoutDate = line.replace(yearMatch[0], '').trim();
       }
     }
 
-    if (degreeRegex.test(lineClean)) {
-      if (currentEdu && currentEdu.institution) {
-        items.push({
-          id: `edu-${items.length + 1}`,
-          institution: currentEdu.institution,
-          degree: currentEdu.degree || 'Degree',
-          location: currentEdu.location || '',
-          startDate: currentEdu.startDate || sDate,
-          endDate: currentEdu.endDate || eDate,
-          current: false,
-        });
-      }
+    // Check for grade / GPA in the line
+    let grade = '';
+    const gradeMatch = textWithoutDate.match(gradeRegex);
+    if (gradeMatch) {
+      grade = gradeMatch[1].trim();
+      textWithoutDate = textWithoutDate.replace(gradeMatch[0], '').trim();
+    }
 
-      let degreeStr = lineClean;
-      let instStr = 'University / Institute';
-      let locStr = '';
+    // Clean leading/trailing punctuation left after removing date
+    const cleanText = textWithoutDate.replace(/^[|·,–—\-]\s*|\s*[|·,–—\-]$/g, '').trim();
 
-      if (lineClean.includes('|') || lineClean.includes('·') || lineClean.includes(',')) {
-        const parts = lineClean.split(/[|·,]/).map((p) => p.trim()).filter(Boolean);
-        degreeStr = parts[0];
-        if (parts.length > 1) instStr = parts[1];
-        if (parts.length > 2) locStr = parts[2];
-      }
+    // Determine if this line represents a NEW education entry
+    const hasDegree = degreeKeywordsRegex.test(cleanText);
+    const hasInst = institutionKeywordsRegex.test(cleanText);
+    const hasDate = Boolean(sDate);
 
-      currentEdu = {
-        degree: degreeStr,
-        institution: instStr,
-        location: locStr,
-        startDate: sDate,
-        endDate: eDate,
-      };
-    } else if (currentEdu) {
-      if (currentEdu.institution === 'University / Institute') {
-        if (lineClean.includes(',')) {
-          const parts = lineClean.split(',');
-          currentEdu.institution = parts[0].trim();
-          currentEdu.location = parts.slice(1).join(', ').trim();
+    const isNewItem = (hasDegree && currentItem && Boolean(currentItem.degree || currentItem.institution)) ||
+                      (hasInst && currentItem && Boolean(currentItem.institution && currentItem.degree)) ||
+                      (hasDate && cleanText && currentItem && Boolean(currentItem.degree && currentItem.institution));
+
+    if (isNewItem) {
+      finalizeCurrentItem();
+    }
+
+    // Parse cleanText into degree, institution, location
+    let degreeStr = '';
+    let instStr = '';
+    let locStr = '';
+
+    if (cleanText.includes(',') || cleanText.includes('|') || cleanText.includes('·') || cleanText.includes(' - ') || cleanText.includes(' – ')) {
+      const parts = cleanText.split(/[,|·]|\s+[-–—]\s+/).map((p) => p.trim()).filter(Boolean);
+      
+      if (parts.length >= 2) {
+        const part0HasDegree = degreeKeywordsRegex.test(parts[0]);
+        const part1HasInst = institutionKeywordsRegex.test(parts[1]);
+        const part0HasInst = institutionKeywordsRegex.test(parts[0]);
+        const part1HasDegree = degreeKeywordsRegex.test(parts[1]);
+
+        if (part0HasInst && !part0HasDegree) {
+          instStr = parts[0];
+          degreeStr = parts[1];
+          locStr = parts.slice(2).join(', ');
+        } else if (part0HasDegree || part1HasInst) {
+          degreeStr = parts[0];
+          instStr = parts[1];
+          locStr = parts.slice(2).join(', ');
         } else {
-          currentEdu.institution = lineClean;
+          degreeStr = parts[0];
+          instStr = parts[1];
+          locStr = parts.slice(2).join(', ');
         }
-      } else if (!currentEdu.location && lineClean.includes(',')) {
-        currentEdu.location = lineClean.trim();
+      } else if (parts.length === 1) {
+        if (hasDegree) degreeStr = parts[0];
+        else if (hasInst) instStr = parts[0];
+        else degreeStr = parts[0];
       }
-    } else {
-      currentEdu = {
-        institution: lineClean,
-        degree: 'Bachelor of Technology',
-        startDate: sDate,
-        endDate: eDate,
+    } else if (cleanText) {
+      if (hasDegree && !hasInst) {
+        degreeStr = cleanText;
+      } else if (hasInst && !hasDegree) {
+        instStr = cleanText;
+      } else {
+        degreeStr = cleanText;
+      }
+    }
+
+    if (!currentItem) {
+      currentItem = {
+        degree: degreeStr || (cleanText && !hasInst ? cleanText : 'Degree'),
+        institution: instStr || '',
+        location: locStr,
+        startDate: sDate || '',
+        endDate: eDate || '',
+        current: isCurrent,
+        grade: grade || undefined,
       };
+    } else {
+      // Merge with current item if appropriate
+      if (degreeStr && (!currentItem.degree || currentItem.degree === 'Degree')) {
+        currentItem.degree = degreeStr;
+      }
+      if (instStr && (!currentItem.institution || currentItem.institution === 'University / Institute')) {
+        currentItem.institution = instStr;
+      }
+      if (locStr && !currentItem.location) {
+        currentItem.location = locStr;
+      }
+      if (sDate) {
+        currentItem.startDate = sDate;
+        currentItem.endDate = eDate;
+        currentItem.current = isCurrent;
+      }
+      if (grade && !currentItem.grade) {
+        currentItem.grade = grade;
+      }
     }
   }
 
-  if (currentEdu) {
-    items.push({
-      id: `edu-${items.length + 1}`,
-      institution: currentEdu.institution || 'University / Institute',
-      degree: currentEdu.degree || 'Degree',
-      location: currentEdu.location || '',
-      startDate: currentEdu.startDate || '2018',
-      endDate: currentEdu.endDate || '2022',
-      current: false,
-    });
-  }
+  finalizeCurrentItem();
 
   return items;
 }
