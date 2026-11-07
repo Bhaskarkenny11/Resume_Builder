@@ -1,8 +1,8 @@
 import * as pdfjsLib from 'pdfjs-dist';
 
-// Use CDN worker to avoid bundling issues with Vite in zero-backend client-side environments
-if (typeof window !== 'undefined' && 'Worker' in window) {
-  pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js`;
+// Configure local same-origin worker to eliminate cross-origin and network CDN failures
+if (typeof window !== 'undefined') {
+  pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.js';
 }
 
 export async function extractTextFromPdf(file: File): Promise<string> {
