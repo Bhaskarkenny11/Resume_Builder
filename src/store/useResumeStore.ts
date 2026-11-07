@@ -118,7 +118,7 @@ interface ResumeState {
 
 export const useResumeStore = create<ResumeState>((set, get) => ({
   currentResume: null,
-  activeTab: 'editor',
+  activeTab: 'dashboard',
   isSaving: false,
   lastSavedAt: null,
   zoom: 0.85,
@@ -137,7 +137,7 @@ export const useResumeStore = create<ResumeState>((set, get) => ({
 
   initialize: async () => {
     const settings = await getGlobalSettings();
-    set({ security: settings.security });
+    set({ security: settings.security, activeTab: 'dashboard' });
 
     // Check if security lock applies
     if (settings.security.pinHash && settings.security.isLocked) {
