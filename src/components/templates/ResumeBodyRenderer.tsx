@@ -145,7 +145,7 @@ export const ResumeBodyRenderer: React.FC<ResumeBodyRendererProps> = ({
             if (style.displaySummaryInHeader) return null;
             if (!summary || !summary.trim()) return null;
             return (
-              <section key={sectionMeta.id} className="space-y-1">
+              <section key={sectionMeta.id} data-resume-section="true" className="space-y-1">
                 {style.showSummaryHeading !== false && (
                   <SectionHeadingRenderer
                     title={sectionMeta.title || 'Professional Summary'}
@@ -157,7 +157,7 @@ export const ResumeBodyRenderer: React.FC<ResumeBodyRendererProps> = ({
                     accentTargets={accentTargets}
                   />
                 )}
-                <p className="text-slate-700 leading-relaxed text-justify mt-1">
+                <p data-resume-item="true" className="text-slate-700 leading-relaxed text-justify mt-1">
                   {summary}
                 </p>
               </section>
@@ -173,7 +173,7 @@ export const ResumeBodyRenderer: React.FC<ResumeBodyRendererProps> = ({
             }[style.experienceColumns || 1];
 
             return (
-              <section key={sectionMeta.id} className="space-y-2">
+              <section key={sectionMeta.id} data-resume-section="true" className="space-y-2">
                 <SectionHeadingRenderer
                   title={sectionMeta.title || 'Work Experience'}
                   icon={<Briefcase className="w-3 h-3" />}
@@ -196,7 +196,7 @@ export const ResumeBodyRenderer: React.FC<ResumeBodyRendererProps> = ({
                     // Structure: Columns vs Full Width
                     if (isStructureColumns && style.experienceLayout !== 'grid') {
                       return (
-                        <div key={exp.id} className="grid grid-cols-1 md:grid-cols-12 gap-3 pt-1 border-t border-slate-100 first:border-0 first:pt-0">
+                        <div key={exp.id} data-resume-item="true" className="grid grid-cols-1 md:grid-cols-12 gap-3 pt-1 border-t border-slate-100 first:border-0 first:pt-0">
                           {/* Left Column: Metadata */}
                           <div className="md:col-span-4 space-y-0.5">
                             <div 
@@ -246,7 +246,7 @@ export const ResumeBodyRenderer: React.FC<ResumeBodyRendererProps> = ({
 
                     // Full Width Structure or Grid Card
                     return (
-                      <div key={exp.id} className={style.experienceLayout === 'grid' ? 'p-2.5 border border-slate-200/80 rounded-lg bg-slate-50/40 space-y-1' : 'space-y-0.5'}>
+                      <div key={exp.id} data-resume-item="true" className={style.experienceLayout === 'grid' ? 'p-2.5 border border-slate-200/80 rounded-lg bg-slate-50/40 space-y-1' : 'space-y-0.5'}>
                         {showPromotionBadge && (
                           <div className="flex items-center gap-1.5 mb-1 text-[11px] font-bold text-amber-700 bg-amber-50/80 px-2 py-0.5 rounded-md w-fit border border-amber-200">
                             <TrendingUp className="w-3 h-3" />
@@ -326,7 +326,7 @@ export const ResumeBodyRenderer: React.FC<ResumeBodyRendererProps> = ({
             }[style.educationColumns || 1];
 
             return (
-              <section key={sectionMeta.id} className="space-y-1.5">
+              <section key={sectionMeta.id} data-resume-section="true" className="space-y-1.5">
                 <SectionHeadingRenderer
                   title={sectionMeta.title || 'Education'}
                   icon={<GraduationCap className="w-3 h-3" />}
@@ -343,7 +343,7 @@ export const ResumeBodyRenderer: React.FC<ResumeBodyRendererProps> = ({
                     const dateText = `${formatDate(edu.startDate)} – ${edu.current ? 'Present' : formatDate(edu.endDate)}`;
 
                     return (
-                      <div key={edu.id} className={style.educationLayout === 'grid' ? 'p-2 border border-slate-200/80 rounded bg-slate-50/40 space-y-1' : 'flex justify-between items-baseline gap-2'}>
+                      <div key={edu.id} data-resume-item="true" className={style.educationLayout === 'grid' ? 'p-2 border border-slate-200/80 rounded bg-slate-50/40 space-y-1' : 'flex justify-between items-baseline gap-2'}>
                         <div>
                           <div 
                             className="font-bold text-xs text-slate-900"
@@ -383,7 +383,7 @@ export const ResumeBodyRenderer: React.FC<ResumeBodyRendererProps> = ({
             const bubbleText = accentTargets.dotsBarsBubbles ? secondaryAccent : '#1e293b';
 
             return (
-              <section key={sectionMeta.id} className="space-y-1">
+              <section key={sectionMeta.id} data-resume-section="true" className="space-y-1">
                 <SectionHeadingRenderer
                   title={sectionMeta.title || 'Skills & Technologies'}
                   icon={<Wrench className="w-3 h-3" />}
@@ -400,7 +400,7 @@ export const ResumeBodyRenderer: React.FC<ResumeBodyRendererProps> = ({
                     {skills.map((skill) => {
                       const pct = skill.level === 'Beginner' ? 25 : skill.level === 'Intermediate' ? 50 : skill.level === 'Advanced' ? 75 : 100;
                       return (
-                        <div key={skill.id} className="space-y-1">
+                        <div key={skill.id} data-resume-item="true" className="space-y-1">
                           <div className="flex justify-between text-slate-800 font-medium">
                             <span>{skill.name}</span>
                             <span className="text-[10px] text-slate-400 font-mono">{skill.level || 'Expert'}</span>
@@ -418,7 +418,7 @@ export const ResumeBodyRenderer: React.FC<ResumeBodyRendererProps> = ({
                 ) : style.skillsLayout === 'grid' ? (
                   <div className={`grid ${colsClass} gap-x-4 gap-y-1 mt-1 text-xs`}>
                     {skills.map((skill) => (
-                      <div key={skill.id} className="flex items-center justify-between text-slate-800 py-0.5">
+                      <div key={skill.id} data-resume-item="true" className="flex items-center justify-between text-slate-800 py-0.5">
                         <span className="font-medium flex items-center gap-1.5">
                           <span style={{ color: secondaryAccent }}>{listBulletChar}</span>
                           <span>{skill.name}</span>
@@ -432,7 +432,7 @@ export const ResumeBodyRenderer: React.FC<ResumeBodyRendererProps> = ({
                 ) : style.skillsLayout === 'rows' ? (
                   <div className="space-y-1 mt-1 text-xs">
                     {skills.map((skill) => (
-                      <div key={skill.id} className="flex items-center gap-2 text-slate-800">
+                      <div key={skill.id} data-resume-item="true" className="flex items-center gap-2 text-slate-800">
                         <span style={{ color: secondaryAccent }}>{listBulletChar}</span>
                         <span className="font-medium">{skill.name}</span>
                         {skill.level && <span className="text-[10px] text-slate-500">· {skill.level}</span>}
@@ -440,7 +440,7 @@ export const ResumeBodyRenderer: React.FC<ResumeBodyRendererProps> = ({
                     ))}
                   </div>
                 ) : style.skillsLayout === 'compact' ? (
-                  <p className="text-xs text-slate-700 leading-relaxed mt-1">
+                  <p data-resume-item="true" className="text-xs text-slate-700 leading-relaxed mt-1">
                     {skills.map((s, idx) => (
                       <React.Fragment key={s.id}>
                         <span className="font-medium">{s.name}</span>
@@ -455,6 +455,7 @@ export const ResumeBodyRenderer: React.FC<ResumeBodyRendererProps> = ({
                     {skills.map((skill) => (
                       <span
                         key={skill.id}
+                        data-resume-item="true"
                         className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium transition-all"
                         style={{
                           backgroundColor: bubbleBg,
@@ -484,7 +485,7 @@ export const ResumeBodyRenderer: React.FC<ResumeBodyRendererProps> = ({
             }[style.projectsColumns || 1];
 
             return (
-              <section key={sectionMeta.id} className="space-y-1.5">
+              <section key={sectionMeta.id} data-resume-section="true" className="space-y-1.5">
                 <SectionHeadingRenderer
                   title={sectionMeta.title || 'Projects'}
                   icon={<FolderGit2 className="w-3 h-3" />}
@@ -499,6 +500,7 @@ export const ResumeBodyRenderer: React.FC<ResumeBodyRendererProps> = ({
                     {projects.map((proj) => (
                       <div
                         key={proj.id}
+                        data-resume-item="true"
                         className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-medium border"
                         style={{
                           backgroundColor: accentTargets.dotsBarsBubbles ? `${secondaryAccent}15` : '#f8fafc',
@@ -518,7 +520,7 @@ export const ResumeBodyRenderer: React.FC<ResumeBodyRendererProps> = ({
                 ) : (
                   <div className={style.projectsLayout === 'grid' ? `grid ${projColsClass} gap-3` : style.projectsLayout === 'compact' ? 'space-y-1' : 'space-y-2'}>
                     {projects.map((proj) => (
-                      <div key={proj.id} className={style.projectsLayout === 'grid' ? 'p-2.5 border border-slate-200/80 rounded-lg bg-slate-50/40 space-y-1' : 'space-y-0.5'}>
+                      <div key={proj.id} data-resume-item="true" className={style.projectsLayout === 'grid' ? 'p-2.5 border border-slate-200/80 rounded-lg bg-slate-50/40 space-y-1' : 'space-y-0.5'}>
                         <div className="flex justify-between items-baseline gap-2">
                           <span 
                             className="font-bold text-xs text-slate-900"
@@ -564,7 +566,7 @@ export const ResumeBodyRenderer: React.FC<ResumeBodyRendererProps> = ({
             }[style.certificatesColumns || 2];
 
             return (
-              <section key={sectionMeta.id} className="space-y-1">
+              <section key={sectionMeta.id} data-resume-section="true" className="space-y-1">
                 <SectionHeadingRenderer
                   title={sectionMeta.title || 'Certifications'}
                   icon={<Award className="w-3 h-3" />}
@@ -579,6 +581,7 @@ export const ResumeBodyRenderer: React.FC<ResumeBodyRendererProps> = ({
                     {certifications.map((cert) => (
                       <span
                         key={cert.id}
+                        data-resume-item="true"
                         className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium border"
                         style={{
                           backgroundColor: accentTargets.dotsBarsBubbles ? `${secondaryAccent}15` : '#f1f5f9',
@@ -593,7 +596,7 @@ export const ResumeBodyRenderer: React.FC<ResumeBodyRendererProps> = ({
                 ) : style.certificatesLayout === 'grid' ? (
                   <div className={`grid ${certColsClass} gap-2`}>
                     {certifications.map((cert) => (
-                      <div key={cert.id} className="p-2 border border-slate-200 rounded text-xs bg-slate-50/50">
+                      <div key={cert.id} data-resume-item="true" className="p-2 border border-slate-200 rounded text-xs bg-slate-50/50">
                         <div 
                           className="font-bold text-slate-900"
                           style={{ color: accentTargets.entryTitle ? effectiveAccent : undefined }}
@@ -615,7 +618,7 @@ export const ResumeBodyRenderer: React.FC<ResumeBodyRendererProps> = ({
                 ) : style.certificatesLayout === 'compact' ? (
                   <div className="space-y-0.5 text-xs">
                     {certifications.map((cert) => (
-                      <div key={cert.id} className="flex justify-between items-baseline gap-2">
+                      <div key={cert.id} data-resume-item="true" className="flex justify-between items-baseline gap-2">
                         <span className="font-medium text-slate-800">{cert.name} {cert.issuer && <span className="text-slate-500 text-[11px]">({cert.issuer})</span>}</span>
                         {cert.issueDate && <span className="font-mono text-[10px] text-slate-400">{formatDate(cert.issueDate)}</span>}
                       </div>
@@ -624,7 +627,7 @@ export const ResumeBodyRenderer: React.FC<ResumeBodyRendererProps> = ({
                 ) : (
                   <div className="space-y-1">
                     {certifications.map((cert) => (
-                      <div key={cert.id} className="flex justify-between text-xs gap-2">
+                      <div key={cert.id} data-resume-item="true" className="flex justify-between text-xs gap-2">
                         <span className="text-slate-900">
                           <span 
                             className="font-bold"
@@ -660,7 +663,7 @@ export const ResumeBodyRenderer: React.FC<ResumeBodyRendererProps> = ({
             const sepChar = style.languagesSeparator === 'pipe' ? '|' : style.languagesSeparator === 'comma' ? ',' : '•';
 
             return (
-              <section key={sectionMeta.id} className="space-y-1">
+              <section key={sectionMeta.id} data-resume-section="true" className="space-y-1">
                 <SectionHeadingRenderer
                   title={sectionMeta.title || 'Languages'}
                   icon={<Globe2 className="w-3 h-3" />}
@@ -673,7 +676,7 @@ export const ResumeBodyRenderer: React.FC<ResumeBodyRendererProps> = ({
                 {style.languagesLayout === 'grid' ? (
                   <div className={`grid ${langColsClass} gap-2 mt-1 text-xs`}>
                     {languages.map((lang) => (
-                      <div key={lang.id} className="flex items-center justify-between p-1.5 border border-slate-200/80 rounded bg-slate-50/40">
+                      <div key={lang.id} data-resume-item="true" className="flex items-center justify-between p-1.5 border border-slate-200/80 rounded bg-slate-50/40">
                         <span className="font-bold text-slate-900">{lang.language}</span>
                         {lang.proficiency && (
                           <span className="text-slate-500 text-[11px]">{lang.proficiency}</span>
@@ -684,7 +687,7 @@ export const ResumeBodyRenderer: React.FC<ResumeBodyRendererProps> = ({
                 ) : style.languagesLayout === 'rows' ? (
                   <div className="space-y-1 mt-1 text-xs">
                     {languages.map((lang) => (
-                      <div key={lang.id} className="flex items-center gap-2 text-slate-800">
+                      <div key={lang.id} data-resume-item="true" className="flex items-center gap-2 text-slate-800">
                         <span style={{ color: secondaryAccent }}>{listBulletChar}</span>
                         <span className="font-bold">{lang.language}</span>
                         {lang.proficiency && <span className="text-slate-500">· {lang.proficiency}</span>}
@@ -696,6 +699,7 @@ export const ResumeBodyRenderer: React.FC<ResumeBodyRendererProps> = ({
                     {languages.map((lang) => (
                       <span
                         key={lang.id}
+                        data-resume-item="true"
                         className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium border"
                         style={{
                           backgroundColor: accentTargets.dotsBarsBubbles ? `${secondaryAccent}15` : '#f1f5f9',
@@ -711,7 +715,7 @@ export const ResumeBodyRenderer: React.FC<ResumeBodyRendererProps> = ({
                   // Compact / inline
                   <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs mt-1">
                     {languages.map((lang, idx) => (
-                      <span key={lang.id} className="text-slate-800 flex items-center gap-1.5">
+                      <span key={lang.id} data-resume-item="true" className="text-slate-800 flex items-center gap-1.5">
                         <span className="font-bold">{lang.language}</span>
                         {lang.proficiency && (
                           <span className="text-slate-500 text-[11px]">({lang.proficiency})</span>
@@ -738,7 +742,7 @@ export const ResumeBodyRenderer: React.FC<ResumeBodyRendererProps> = ({
             return (
               <div key={sectionMeta.id} className="space-y-3">
                 {customSections.map((sec) => (
-                  <section key={sec.id} className="space-y-1.5">
+                  <section key={sec.id} data-resume-section="true" className="space-y-1.5">
                     <SectionHeadingRenderer
                       title={sec.title}
                       icon={<Layers className="w-3 h-3" />}
@@ -750,7 +754,7 @@ export const ResumeBodyRenderer: React.FC<ResumeBodyRendererProps> = ({
                     />
                     <div className={style.customSectionsLayout === 'grid' ? `grid ${customColsClass} gap-2` : style.customSectionsLayout === 'compact' ? 'space-y-1' : 'space-y-2'}>
                       {sec.items.map((item) => (
-                        <div key={item.id} className={style.customSectionsLayout === 'grid' ? 'p-2 border border-slate-200/80 rounded bg-slate-50/40 space-y-0.5' : 'space-y-0.5'}>
+                        <div key={item.id} data-resume-item="true" className={style.customSectionsLayout === 'grid' ? 'p-2 border border-slate-200/80 rounded bg-slate-50/40 space-y-0.5' : 'space-y-0.5'}>
                           <div className="flex justify-between items-baseline gap-2">
                             <span 
                               className="font-bold text-xs text-slate-900"

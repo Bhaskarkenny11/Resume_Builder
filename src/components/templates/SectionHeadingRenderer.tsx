@@ -60,7 +60,7 @@ export const SectionHeadingRenderer: React.FC<SectionHeadingRendererProps> = ({
   switch (headingStyle) {
     case 'underline_accent':
       return (
-        <div className={`relative pb-1 mb-2 border-b border-slate-200 ${className}`}>
+        <div data-resume-heading="true" className={`relative pb-1 mb-2 border-b border-slate-200 ${className}`}>
           <div className="flex items-center gap-2">
             {renderIcon()}
             <h3 className="text-xs font-bold tracking-wider" style={{ color: textColor }}>
@@ -77,7 +77,7 @@ export const SectionHeadingRenderer: React.FC<SectionHeadingRendererProps> = ({
 
     case 'boxed':
       return (
-        <div className={`mb-2.5 ${className}`}>
+        <div data-resume-heading="true" className={`mb-2.5 ${className}`}>
           <div 
             className="inline-flex items-center gap-2 px-2.5 py-0.5 border rounded-xs bg-slate-50/50"
             style={{ borderColor: lineColor }}
@@ -93,6 +93,7 @@ export const SectionHeadingRenderer: React.FC<SectionHeadingRendererProps> = ({
     case 'double_line':
       return (
         <div 
+          data-resume-heading="true"
           className="border-t border-b py-1 mb-2.5" 
           style={{ borderColor: lineColor }}
         >
@@ -108,6 +109,7 @@ export const SectionHeadingRenderer: React.FC<SectionHeadingRendererProps> = ({
     case 'overline_underline':
       return (
         <div 
+          data-resume-heading="true"
           className="border-t border-b py-1 mb-2.5 text-center"
           style={{ borderColor: lineColor }}
         >
@@ -123,6 +125,7 @@ export const SectionHeadingRenderer: React.FC<SectionHeadingRendererProps> = ({
     case 'left_bar':
       return (
         <div 
+          data-resume-heading="true"
           className={`pl-2 mb-2 border-l-[3.5px] flex items-center gap-2 ${className}`}
           style={{ borderColor: lineColor }}
         >
@@ -136,6 +139,7 @@ export const SectionHeadingRenderer: React.FC<SectionHeadingRendererProps> = ({
     case 'shaded_banner':
       return (
         <div 
+          data-resume-heading="true"
           className="px-2 py-1 mb-2 rounded-xs flex items-center gap-2"
           style={{ 
             backgroundColor: isLineColored ? `${accentColor}18` : '#f1f5f9',
@@ -152,6 +156,7 @@ export const SectionHeadingRenderer: React.FC<SectionHeadingRendererProps> = ({
     case 'wavy_dashed':
       return (
         <div 
+          data-resume-heading="true"
           className={`pb-1 mb-2 border-b border-dashed ${className}`}
           style={{ borderColor: lineColor }}
         >
@@ -168,6 +173,7 @@ export const SectionHeadingRenderer: React.FC<SectionHeadingRendererProps> = ({
     default:
       return (
         <div 
+          data-resume-heading="true"
           className={`pb-1 mb-2 border-b-2 flex items-center gap-2 ${className}`}
           style={{ borderColor: lineColor }}
         >

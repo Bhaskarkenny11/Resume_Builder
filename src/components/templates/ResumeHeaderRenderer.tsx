@@ -393,7 +393,7 @@ export const ResumeHeaderRenderer: React.FC<ResumeHeaderRendererProps> = ({
   // 1. Photo Top: Photo centered on top, profile details centered below it
   if (photoPosition === 'top') {
     return (
-      <header className={`${headerContainerClasses} flex flex-col items-center justify-center text-center`} style={headerContainerStyle}>
+      <header data-resume-header="true" className={`${headerContainerClasses} flex flex-col items-center justify-center text-center`} style={headerContainerStyle}>
         {isPhotoVisible && <div className="mb-3">{renderPhoto()}</div>}
         {renderTextContent()}
       </header>
@@ -403,7 +403,7 @@ export const ResumeHeaderRenderer: React.FC<ResumeHeaderRendererProps> = ({
   // 2. Photo Right: Profile details on left, Photo on right
   if (photoPosition === 'right') {
     return (
-      <header className={`${headerContainerClasses} flex items-center justify-between gap-4 sm:gap-6`} style={headerContainerStyle}>
+      <header data-resume-header="true" className={`${headerContainerClasses} flex items-center justify-between gap-4 sm:gap-6`} style={headerContainerStyle}>
         {renderTextContent()}
         {isPhotoVisible && (
           <div className="shrink-0 order-last self-center">
@@ -416,7 +416,7 @@ export const ResumeHeaderRenderer: React.FC<ResumeHeaderRendererProps> = ({
 
   // 3. Photo Left (default): Photo on left, Profile details on right
   return (
-    <header className={`${headerContainerClasses} flex items-center gap-4 sm:gap-6`} style={headerContainerStyle}>
+    <header data-resume-header="true" className={`${headerContainerClasses} flex items-center gap-4 sm:gap-6`} style={headerContainerStyle}>
       {isPhotoVisible && (
         <div className="shrink-0 self-center">
           {renderPhoto()}
