@@ -255,7 +255,7 @@ export const DashboardView: React.FC = () => {
           <div 
             onClick={handleLogoClick}
             className="flex items-center gap-3 cursor-pointer select-none group"
-            title="ProFile Avionics Console (Triple-click for Admin)"
+            title="ProtFolio Console (Triple-click for Admin)"
           >
             {/* Beveled avionics logo container */}
             <div 
@@ -266,7 +266,7 @@ export const DashboardView: React.FC = () => {
 
             <div className="flex items-center gap-2.5">
               <span className="font-black text-sm sm:text-base text-white tracking-wider font-mono">
-                PROFILE<span className="text-lime-400">.</span>ATS
+                PROTFOLIO<span className="text-lime-400">.</span>ATS
               </span>
 
               {/* Glowing Client-Side Status Indicator */}
@@ -360,17 +360,17 @@ export const DashboardView: React.FC = () => {
             <div>
               <div className="flex items-center gap-3">
                 <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-white font-mono">
-                  {dashboardView === 'templates' ? 'AVIONICS TEMPLATES' : 'LOCAL FLIGHT ARCHIVES'}
+                  {dashboardView === 'templates' ? 'ProtFolio' : 'My Local Resumes'}
                 </h1>
                 <span className="text-xs font-mono font-bold text-lime-400 bg-lime-950/50 border border-lime-800/60 px-2.5 py-1 rounded-full">
                   {dashboardView === 'templates' 
                     ? `${allTemplates.length} READY`
-                    : `${allResumes.length} ARCHIVED`}
+                    : `${allResumes.length} SAVED`}
                 </span>
               </div>
               <p className="text-xs sm:text-sm text-zinc-400 mt-1.5 max-w-xl font-mono leading-relaxed">
                 {dashboardView === 'templates'
-                  ? 'Tactile avionics hardware widgets engineered for high-conversion ATS academic & executive resumes.'
+                  ? 'ATS-compliant resume templates engineered for high readability and instant export.'
                   : 'Client-side resumes secured within local browser IndexedDB storage.'}
               </p>
             </div>
