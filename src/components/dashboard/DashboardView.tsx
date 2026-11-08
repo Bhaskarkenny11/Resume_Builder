@@ -2,15 +2,16 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { db, exportDatabaseBackup, importDatabaseBackup } from '../../db';
 import { useResumeStore } from '../../store/useResumeStore';
-import { ResumeRecord, ResumeCategory, TemplateId } from '../../types/resume';
+import { ResumeRecord, TemplateId } from '../../types/resume';
 import { COUNTRY_PRESETS } from '../../lib/constants';
 import { triggerPdfDownload } from '../templates/PdfDocument';
-import { AppleGradientBackground } from '../common/AppleGradientBackground';
 import { TemplateConfig, DashboardTemplateCategory } from '../../lib/templatesConfig';
 import { getAllTemplates } from '../../lib/customAssetsManager';
 import { AdminAuthModal } from '../admin/AdminAuthModal';
-import { TemplateMiniPreview } from './TemplateMiniPreview';
-import { TemplateGalleryModal } from './TemplateGalleryModal';
+import { AvionicsTemplateCard } from './AvionicsTemplateCard';
+import { AvionicsDocumentModal } from './AvionicsDocumentModal';
+import { DotMatrixBadge } from './DotMatrixBadge';
+import { LuminousLimeSlider } from './LuminousLimeSlider';
 import { 
   Plus, 
   FileText, 
@@ -24,18 +25,23 @@ import {
   Sparkles, 
   Clock, 
   ExternalLink,
-  Eye,
-  ShieldCheck,
-  ShieldAlert,
-  LayoutGrid
+  ShieldCheck, 
+  ShieldAlert, 
+  LayoutGrid,
+  Plane,
+  Radar,
+  Radio,
+  Sliders,
+  CheckCircle2,
+  Terminal
 } from 'lucide-react';
 
-const CATEGORY_TABS: { id: 'All Templates' | DashboardTemplateCategory; label: string }[] = [
-  { id: 'All Templates', label: 'All Templates' },
-  { id: 'ATS Standard', label: 'ATS Standard' },
-  { id: 'Two-Column', label: 'Two-Column' },
-  { id: 'Modern Executive', label: 'Modern Executive' },
-  { id: 'Minimal', label: 'Minimal' },
+const CATEGORY_TABS: { id: 'All Templates' | DashboardTemplateCategory; label: string; code: string }[] = [
+  { id: 'All Templates', label: 'All Formats', code: 'ALL' },
+  { id: 'ATS Standard', label: 'ATS Standard', code: 'ATS' },
+  { id: 'Two-Column', label: 'Two-Column', code: 'TWO' },
+  { id: 'Modern Executive', label: 'Modern Executive', code: 'EXE' },
+  { id: 'Minimal', label: 'Minimal Monochrome', code: 'MIN' },
 ];
 
 export const DashboardView: React.FC = () => {
@@ -52,8 +58,8 @@ export const DashboardView: React.FC = () => {
 
   const [activeCategoryTab, setActiveCategoryTab] = useState<'All Templates' | DashboardTemplateCategory>('All Templates');
   const [templateSearchQuery, setTemplateSearchQuery] = useState('');
-  const [previewTemplateId, setPreviewTemplateId] = useState<TemplateId | null>(null);
-  const [showPreviewModal, setShowPreviewModal] = useState(false);
+  const [selectedTemplateForPreview, setSelectedTemplateForPreview] = useState<TemplateId | null>(null);
+  const [showAvionicsModal, setShowAvionicsModal] = useState(false);
   const [downloadingId, setDownloadingId] = useState<string | null>(null);
   const [showAdminAuthModal, setShowAdminAuthModal] = useState(false);
   const [isAdminSession, setIsAdminSession] = useState(() => {
@@ -64,7 +70,7 @@ export const DashboardView: React.FC = () => {
     }
   });
 
-  // Stealth Trigger 1: Triple-click on Novafolio Logo
+  // Stealth Trigger 1: Triple-click on Avionics Logo
   const logoClickCountRef = useRef(0);
   const logoTimerRef = useRef<any>(null);
   const handleLogoClick = () => {
@@ -147,9 +153,9 @@ export const DashboardView: React.FC = () => {
     await createNewResume(false, templateId);
   };
 
-  const handlePreviewTemplate = (templateId: TemplateId) => {
-    setPreviewTemplateId(templateId);
-    setShowPreviewModal(true);
+  const handlePreviewTemplate = (templateId: string) => {
+    setSelectedTemplateForPreview(templateId as TemplateId);
+    setShowAvionicsModal(true);
   };
 
   const handleDownloadPdf = async (resume: ResumeRecord, e: React.MouseEvent) => {
@@ -188,7 +194,7 @@ export const DashboardView: React.FC = () => {
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `ResumeBuilder_Backup_${new Date().toISOString().slice(0, 10)}.json`;
+      a.download = `ResumeBuilder_Avionics_Backup_${new Date().toISOString().slice(0, 10)}.json`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
@@ -232,52 +238,64 @@ export const DashboardView: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#09090b] text-zinc-100 flex flex-col relative overflow-x-hidden selection:bg-zinc-800 selection:text-white">
-      {/* Subtle Linear / Raycast Style Ambient Radial Canvas Sheen */}
-      <AppleGradientBackground />
+    <div className="min-h-screen bg-[#0A0D12] text-zinc-100 flex flex-col relative overflow-x-hidden selection:bg-lime-400 selection:text-black">
+      {/* Background Tactile Perforation & Cockpit Radar Grid Sheen */}
+      <div 
+        className="fixed inset-0 pointer-events-none opacity-25 z-0"
+        style={{
+          backgroundImage: 'radial-gradient(circle at 50% 10%, rgba(132, 204, 22, 0.08) 0%, transparent 60%), radial-gradient(circle, rgba(255, 255, 255, 0.06) 1px, transparent 1px)',
+          backgroundSize: '100% 100%, 16px 16px',
+        }}
+      />
 
-      {/* 1. NAVBAR (Linear / Vercel Design System) */}
-      <header className="sticky top-0 z-30 bg-[#09090b]/80 backdrop-blur-xl border-b border-zinc-800/80 px-4 sm:px-8 py-3">
+      {/* 1. TOP AVIONICS APP HEADER WITH CLIENT-SIDE STATUS INDICATOR */}
+      <header className="sticky top-0 z-30 bg-[#0E1218]/90 backdrop-blur-xl border-b border-white/[0.08] px-4 sm:px-8 py-3 shadow-[0_4px_25px_rgba(0,0,0,0.7)]">
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
-          {/* Left: Logo Icon + "ProFile" Semi-Bold (Triple-click logo opens Admin) */}
+          {/* Left: Tactical Hardware Logo & Client-side status indicator */}
           <div 
             onClick={handleLogoClick}
             className="flex items-center gap-3 cursor-pointer select-none group"
-            title="ProFile (Client-Side Privacy)"
+            title="ProFile Avionics Console (Triple-click for Admin)"
           >
-            <div className="w-8 h-8 rounded-lg bg-zinc-900 border border-zinc-800 text-zinc-200 flex items-center justify-center shadow-xs group-hover:border-zinc-700 transition-colors">
-              <FileText className="w-4 h-4 text-zinc-300" />
+            {/* Beveled avionics logo container */}
+            <div 
+              className="w-9 h-9 rounded-xl bg-[#090B0E] border border-white/[0.1] text-lime-400 flex items-center justify-center shadow-[inset_0_2px_4px_rgba(0,0,0,0.85)] group-hover:border-lime-500/50 transition-colors"
+            >
+              <Plane className="w-4 h-4 fill-lime-400 text-lime-400 transform -rotate-45" />
             </div>
+
             <div className="flex items-center gap-2.5">
-              <span className="font-semibold text-sm sm:text-base text-zinc-100 tracking-tight">
-                ProFile
+              <span className="font-black text-sm sm:text-base text-white tracking-wider font-mono">
+                PROFILE<span className="text-lime-400">.</span>ATS
               </span>
-              <span className="text-[11px] font-mono text-zinc-400 bg-zinc-900/90 border border-zinc-800 px-2.5 py-0.5 rounded-full flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                <span>Local • Client-Side</span>
+
+              {/* Glowing Client-Side Status Indicator */}
+              <span className="hidden sm:inline-flex items-center gap-1.5 text-[10px] font-mono font-medium text-emerald-400 bg-emerald-950/50 border border-emerald-800/50 px-2.5 py-0.5 rounded-full shadow-[0_0_10px_rgba(16,185,129,0.2)]">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                <span>100% CLIENT-SIDE • LOCAL ENCRYPTED</span>
               </span>
             </div>
           </div>
 
-          {/* Right: Clean Minimal Action Bar */}
+          {/* Right: Tactical Action Bar */}
           <div className="flex items-center gap-1.5 sm:gap-2">
             {security.pinHash && (
               <button
                 onClick={lockWorkspace}
-                className="b2b-btn-secondary px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-medium flex items-center gap-1.5"
+                className="px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-mono font-medium bg-[#12161E] hover:bg-[#181D26] text-zinc-300 border border-white/[0.08] flex items-center gap-1.5 transition-all shadow-[inset_0_1px_1px_rgba(255,255,255,0.06)]"
                 title="Lock Workspace Now"
               >
-                <Lock className="w-3.5 h-3.5" />
+                <Lock className="w-3.5 h-3.5 text-zinc-400" />
                 <span className="hidden sm:inline">Lock</span>
               </button>
             )}
 
             <button
               onClick={() => setShowUploadModal(true)}
-              className="b2b-btn-secondary px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-medium flex items-center gap-1.5"
+              className="px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-mono font-medium bg-[#12161E] hover:bg-[#181D26] text-zinc-300 border border-white/[0.08] flex items-center gap-1.5 transition-all shadow-[inset_0_1px_1px_rgba(255,255,255,0.06)]"
               title="Scan and import PDF or DOCX resume"
             >
-              <Sparkles className="w-3.5 h-3.5 text-zinc-400" />
+              <Sparkles className="w-3.5 h-3.5 text-amber-400" />
               <span className="hidden sm:inline">Scan</span>
             </button>
 
@@ -290,7 +308,7 @@ export const DashboardView: React.FC = () => {
             />
             <button
               onClick={() => backupInputRef.current?.click()}
-              className="b2b-btn-secondary px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-medium flex items-center gap-1.5"
+              className="px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-mono font-medium bg-[#12161E] hover:bg-[#181D26] text-zinc-300 border border-white/[0.08] flex items-center gap-1.5 transition-all shadow-[inset_0_1px_1px_rgba(255,255,255,0.06)]"
               title="Import JSON backup"
             >
               <Upload className="w-3.5 h-3.5 text-zinc-400" />
@@ -299,18 +317,18 @@ export const DashboardView: React.FC = () => {
 
             <button
               onClick={handleExportBackup}
-              className="b2b-btn-secondary px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-medium flex items-center gap-1.5"
+              className="px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-mono font-medium bg-[#12161E] hover:bg-[#181D26] text-zinc-300 border border-white/[0.08] flex items-center gap-1.5 transition-all shadow-[inset_0_1px_1px_rgba(255,255,255,0.06)]"
               title="Export complete IndexedDB backup as JSON"
             >
               <Database className="w-3.5 h-3.5 text-zinc-400" />
               <span className="hidden sm:inline">Backup</span>
             </button>
 
-            {/* Admin Console Pill - ONLY Visible in Verified Admin Session */}
+            {/* Admin Console Pill - Verified Admin Session */}
             {isAdminSession && (
               <button
                 onClick={() => setActiveTab('admin')}
-                className="px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 text-indigo-300 border border-indigo-500/40 bg-indigo-950/60 hover:bg-indigo-900/60 hover:border-indigo-400 transition-all shadow-xs"
+                className="px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-mono font-semibold flex items-center gap-1.5 text-indigo-300 border border-indigo-500/40 bg-indigo-950/60 hover:bg-indigo-900/60 transition-all shadow-xs"
                 title="Open Admin Console"
               >
                 <ShieldAlert className="w-3.5 h-3.5 text-indigo-400" />
@@ -318,79 +336,85 @@ export const DashboardView: React.FC = () => {
               </button>
             )}
 
-            {/* Primary CTA: High-Contrast + New Resume Button */}
+            {/* Primary CTA: Luminous Lime Button */}
             <button
               onClick={() => handleCreateNew()}
-              className="b2b-btn-primary px-3.5 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 shrink-0 shadow-xs active:scale-95 ml-1"
+              className="relative h-8 px-4 rounded-full flex items-center gap-1.5 font-black text-xs uppercase tracking-wider text-black select-none transition-all active:scale-95 group shadow-md cursor-pointer ml-1"
+              style={{
+                background: 'linear-gradient(180deg, #c4f934 0%, #84cc16 100%)',
+                boxShadow: '0 0 18px rgba(163, 230, 53, 0.65), inset 0 1px 1px rgba(255, 255, 255, 0.7), inset 0 -1px 2px rgba(0, 0, 0, 0.4)',
+              }}
             >
-              <Plus className="w-3.5 h-3.5" />
-              <span>New Resume</span>
+              <Plus className="w-3.5 h-3.5 text-black stroke-[3]" />
+              <span>New Flight</span>
             </button>
           </div>
         </div>
       </header>
 
-      {/* MAIN CONTAINER */}
+      {/* 2. MAIN COCKPIT DASHBOARD BODY */}
       <main className="max-w-7xl mx-auto w-full px-4 sm:px-8 py-8 flex-1 relative z-10">
-        {/* 2. PAGE HEADER / HERO (Organic, Zero Heavy Container Boxes) */}
+        {/* HERO TITLE & DUAL VIEW SWITCHER */}
         <div className="mb-8">
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-6 border-b border-zinc-800/80">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-6 border-b border-white/[0.08]">
             <div>
               <div className="flex items-center gap-3">
-                <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-zinc-100">
-                  {dashboardView === 'templates' ? 'Resume Templates' : 'My Local Resumes'}
+                <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-white font-mono">
+                  {dashboardView === 'templates' ? 'AVIONICS TEMPLATES' : 'LOCAL FLIGHT ARCHIVES'}
                 </h1>
-                <span className="text-xs font-mono font-medium text-zinc-400 bg-zinc-900 border border-zinc-800 px-2.5 py-1 rounded-full">
+                <span className="text-xs font-mono font-bold text-lime-400 bg-lime-950/50 border border-lime-800/60 px-2.5 py-1 rounded-full">
                   {dashboardView === 'templates' 
-                    ? `${allTemplates.length} layouts available`
-                    : `${allResumes.length} saved`}
+                    ? `${allTemplates.length} READY`
+                    : `${allResumes.length} ARCHIVED`}
                 </span>
               </div>
-              <p className="text-sm text-zinc-400 mt-1.5 max-w-xl leading-relaxed">
+              <p className="text-xs sm:text-sm text-zinc-400 mt-1.5 max-w-xl font-mono leading-relaxed">
                 {dashboardView === 'templates'
-                  ? 'ATS-compliant vector templates engineered for high readability and instant export.'
-                  : 'Manage and customize your client-side resumes stored privately in browser IndexedDB.'}
+                  ? 'Tactile avionics hardware widgets engineered for high-conversion ATS academic & executive resumes.'
+                  : 'Client-side resumes secured within local browser IndexedDB storage.'}
               </p>
             </div>
 
-            {/* Dual Switcher: Templates vs My Resumes */}
+            {/* Recessed Dual Switcher: Flight Templates vs My Resumes */}
             {allResumes.length > 0 && (
-              <div className="flex items-center gap-1 p-1 bg-zinc-900/90 border border-zinc-800 rounded-xl self-start md:self-auto shrink-0">
+              <div 
+                className="flex items-center gap-1 p-1 bg-[#090C10] border border-white/[0.08] rounded-2xl self-start md:self-auto shrink-0 shadow-[inset_0_2px_4px_rgba(0,0,0,0.8)]"
+              >
                 <button
                   type="button"
                   onClick={() => setDashboardView('templates')}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all flex items-center gap-1.5 ${
+                  className={`px-3.5 py-1.5 rounded-xl text-xs font-mono font-medium transition-all flex items-center gap-2 ${
                     dashboardView === 'templates'
-                      ? 'bg-zinc-800 text-zinc-100 border border-zinc-700/60 shadow-xs'
-                      : 'text-zinc-400 hover:text-zinc-200'
+                      ? 'bg-[#181D26] text-lime-400 border border-white/[0.1] shadow-xs'
+                      : 'text-zinc-400 hover:text-white'
                   }`}
                 >
-                  <LayoutGrid className="w-3.5 h-3.5" />
+                  <Radar className="w-3.5 h-3.5" />
                   <span>Templates</span>
                 </button>
                 <button
                   type="button"
                   onClick={() => setDashboardView('my_resumes')}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all flex items-center gap-1.5 ${
+                  className={`px-3.5 py-1.5 rounded-xl text-xs font-mono font-medium transition-all flex items-center gap-2 ${
                     dashboardView === 'my_resumes'
-                      ? 'bg-zinc-800 text-zinc-100 border border-zinc-700/60 shadow-xs'
-                      : 'text-zinc-400 hover:text-zinc-200'
+                      ? 'bg-[#181D26] text-lime-400 border border-white/[0.1] shadow-xs'
+                      : 'text-zinc-400 hover:text-white'
                   }`}
                 >
                   <FileText className="w-3.5 h-3.5" />
-                  <span>My Resumes</span>
-                  <span className="text-[10px] font-mono px-1.5 py-0.2 rounded-full bg-zinc-700 text-zinc-300">
-                    {allResumes.length}
-                  </span>
+                  <span>My Resumes ({allResumes.length})</span>
                 </button>
               </div>
             )}
           </div>
 
-          {/* Segmented Pill Bar: Category Tabs */}
+          {/* FILTER CONTROLS & RECESSED SEARCH BAR */}
           {dashboardView === 'templates' ? (
             <div className="mt-6 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
-              <div className="flex items-center gap-1 p-1 bg-zinc-900/80 border border-zinc-800/80 rounded-xl overflow-x-auto no-scrollbar">
+              {/* Category Segmented Hardware Switcher */}
+              <div 
+                className="flex items-center gap-1.5 p-1.5 bg-[#090C10] border border-white/[0.08] rounded-2xl overflow-x-auto no-scrollbar shadow-[inset_0_2px_6px_rgba(0,0,0,0.8)]"
+              >
                 {CATEGORY_TABS.map((tab) => {
                   const isActive = activeCategoryTab === tab.id;
                   const count = tab.id === 'All Templates' 
@@ -401,45 +425,46 @@ export const DashboardView: React.FC = () => {
                     <button
                       key={tab.id}
                       onClick={() => setActiveCategoryTab(tab.id)}
-                      className={`px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all whitespace-nowrap flex items-center gap-1.5 ${
+                      className={`px-3 py-1.5 rounded-xl text-xs font-mono font-medium transition-all whitespace-nowrap flex items-center gap-2 ${
                         isActive
-                          ? 'bg-zinc-800 text-zinc-100 border border-zinc-700/60 shadow-xs'
-                          : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/40 border border-transparent'
+                          ? 'bg-[#181D26] text-lime-400 border border-lime-500/30 shadow-[0_0_12px_rgba(163,230,53,0.2)]'
+                          : 'text-zinc-400 hover:text-zinc-200 hover:bg-[#12161E] border border-transparent'
                       }`}
                     >
+                      <span className="text-[10px] opacity-60">[{tab.code}]</span>
                       <span>{tab.label}</span>
-                      <span className="text-[10px] font-mono text-zinc-500">
-                        {count}
-                      </span>
+                      <span className="text-[10px] font-mono text-zinc-500">({count})</span>
                     </button>
                   );
                 })}
               </div>
 
-              {/* Minimal Search Input */}
-              <div className="relative w-full sm:w-64">
-                <Search className="w-3.5 h-3.5 text-zinc-500 absolute left-3 top-2.5" />
+              {/* Recessed Hardware Search Bar */}
+              <div className="relative w-full sm:w-72">
+                <Search className="w-3.5 h-3.5 text-zinc-500 absolute left-3.5 top-2.5" />
                 <input
                   type="text"
                   value={templateSearchQuery}
                   onChange={(e) => setTemplateSearchQuery(e.target.value)}
-                  placeholder="Filter templates..."
-                  className="w-full pl-8 pr-3 py-1.5 text-xs bg-zinc-900/60 border border-zinc-800 text-zinc-200 rounded-lg focus:outline-none focus:border-zinc-600 placeholder:text-zinc-500 transition-all"
+                  placeholder="FILTER FLIGHT CODES..."
+                  className="w-full pl-9 pr-3 py-1.5 text-xs font-mono bg-[#090C10] border border-white/[0.08] text-white rounded-xl focus:outline-none focus:border-lime-500/50 focus:shadow-[0_0_15px_rgba(163,230,53,0.2)] placeholder:text-zinc-600 transition-all shadow-[inset_0_2px_4px_rgba(0,0,0,0.8)]"
                 />
               </div>
             </div>
           ) : (
             /* Saved Resumes Filter Bar */
             <div className="mt-6 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
-              <div className="flex items-center gap-1 p-1 bg-zinc-900/80 border border-zinc-800/80 rounded-xl overflow-x-auto no-scrollbar">
+              <div 
+                className="flex items-center gap-1.5 p-1.5 bg-[#090C10] border border-white/[0.08] rounded-2xl overflow-x-auto no-scrollbar shadow-[inset_0_2px_6px_rgba(0,0,0,0.8)]"
+              >
                 {['All', 'Software & Tech', 'Business & Operations', 'Design & Creative', 'Executive & Leadership'].map((cat) => (
                   <button
                     key={cat}
                     onClick={() => setSavedResumeCategory(cat)}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all whitespace-nowrap ${
+                    className={`px-3 py-1.5 rounded-xl text-xs font-mono font-medium transition-all whitespace-nowrap ${
                       savedResumeCategory === cat
-                        ? 'bg-zinc-800 text-zinc-100 border border-zinc-700/60 shadow-xs'
-                        : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/40 border border-transparent'
+                        ? 'bg-[#181D26] text-lime-400 border border-lime-500/30'
+                        : 'text-zinc-400 hover:text-white border border-transparent'
                     }`}
                   >
                     {cat}
@@ -447,164 +472,144 @@ export const DashboardView: React.FC = () => {
                 ))}
               </div>
 
-              <div className="relative w-full sm:w-64">
-                <Search className="w-3.5 h-3.5 text-zinc-500 absolute left-3 top-2.5" />
+              <div className="relative w-full sm:w-72">
+                <Search className="w-3.5 h-3.5 text-zinc-500 absolute left-3.5 top-2.5" />
                 <input
                   type="text"
                   value={savedResumeSearch}
                   onChange={(e) => setSavedResumeSearch(e.target.value)}
-                  placeholder="Search saved resumes..."
-                  className="w-full pl-8 pr-3 py-1.5 text-xs bg-zinc-900/60 border border-zinc-800 text-zinc-200 rounded-lg focus:outline-none focus:border-zinc-600 placeholder:text-zinc-500 transition-all"
+                  placeholder="SEARCH ARCHIVES..."
+                  className="w-full pl-9 pr-3 py-1.5 text-xs font-mono bg-[#090C10] border border-white/[0.08] text-white rounded-xl focus:outline-none focus:border-lime-500/50 placeholder:text-zinc-600 transition-all shadow-[inset_0_2px_4px_rgba(0,0,0,0.8)]"
                 />
               </div>
             </div>
           )}
         </div>
 
-        {/* 3. TEMPLATE GRID (4-Column Responsive Grid) */}
+        {/* 3. MULTI-ROW RESPONSIVE GRID LAYOUT (grid-cols-1 md:grid-cols-2 xl:grid-cols-3) */}
         {dashboardView === 'templates' ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 sm:gap-8">
             {filteredTemplates.map((template: TemplateConfig) => (
-              <div
+              <AvionicsTemplateCard
                 key={template.id}
-                className="group relative flex flex-col rounded-xl border border-zinc-800 bg-zinc-900/40 overflow-hidden hover:border-zinc-700 hover:shadow-2xl hover:shadow-black/60 transition-all duration-300"
-              >
-                {/* Framed Mockup Container with Standard A4 Aspect Ratio */}
-                <div className="relative w-full aspect-[210/297] bg-zinc-950/80 overflow-hidden p-3 flex items-center justify-center">
-                  {/* Resume Sheet Mockup with Subtle Hover Zoom Effect */}
-                  <div className="w-full h-full rounded-md overflow-hidden bg-white shadow-md border border-zinc-300/40 transition-transform duration-300 ease-out group-hover:scale-[1.02]">
-                    <TemplateMiniPreview templateId={template.id} />
-                  </div>
-
-                  {/* Slick Glassmorphism Backdrop Overlay on Hover */}
-                  <div className="absolute inset-0 bg-zinc-950/75 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex flex-col items-center justify-center gap-2.5 p-5 z-20">
-                    <button
-                      type="button"
-                      onClick={() => handlePreviewTemplate(template.id)}
-                      className="w-full py-2 px-3 rounded-lg bg-zinc-900/90 hover:bg-zinc-800 text-zinc-200 text-xs font-medium border border-zinc-700/80 transition-all flex items-center justify-center gap-1.5 shadow-xs active:scale-95"
-                    >
-                      <Eye className="w-3.5 h-3.5 text-zinc-400" />
-                      <span>Preview</span>
-                    </button>
-                    
-                    <button
-                      type="button"
-                      onClick={() => handleCreateNew(template.id)}
-                      className="w-full py-2 px-3 rounded-lg bg-white hover:bg-zinc-200 text-zinc-950 text-xs font-semibold transition-all flex items-center justify-center gap-1.5 shadow-xs active:scale-95"
-                    >
-                      <Sparkles className="w-3.5 h-3.5 text-zinc-950" />
-                      <span>Use Template</span>
-                    </button>
-                  </div>
-                </div>
-
-                {/* Footer Strip Below the Preview */}
-                <div className="p-3.5 border-t border-zinc-800/80 bg-zinc-900/60 flex items-center justify-between gap-2">
-                  <div className="min-w-0 flex-1">
-                    <h3 className="font-medium text-zinc-100 text-sm truncate">
-                      {template.name}
-                    </h3>
-                    <p className="text-[11px] font-mono text-zinc-400 truncate mt-0.5">
-                      {template.layoutTag}
-                    </p>
-                  </div>
-
-                  {/* ATS Rating Indicator */}
-                  <div className="flex items-center gap-1 text-[11px] font-medium text-emerald-400 bg-emerald-950/40 border border-emerald-900/60 px-2 py-0.5 rounded-full shrink-0">
-                    <ShieldCheck className="w-3 h-3 text-emerald-400" />
-                    <span>{template.atsRating}</span>
-                  </div>
-                </div>
-              </div>
+                template={template}
+                onPreview={handlePreviewTemplate}
+                onUseTemplate={(id) => handleCreateNew(id as TemplateId)}
+              />
             ))}
           </div>
         ) : (
-          /* SAVED RESUMES GRID (Linear Dark B2B Theme) */
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {/* Create New Card */}
+          /* SAVED RESUMES AVIONICS ARCHIVE GRID */
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 sm:gap-8">
+            {/* Create New Flight Card */}
             <div
               onClick={() => handleCreateNew()}
-              className="group min-h-[220px] rounded-xl border border-dashed border-zinc-800 bg-zinc-900/20 hover:bg-zinc-900/40 hover:border-zinc-700 p-6 flex flex-col items-center justify-center cursor-pointer transition-all duration-300 text-center"
+              className="group min-h-[300px] rounded-[32px] border border-dashed border-white/[0.15] bg-[#0E1218]/40 hover:bg-[#12161E]/80 hover:border-lime-500/40 p-8 flex flex-col items-center justify-center cursor-pointer transition-all duration-300 text-center shadow-[inset_0_2px_10px_rgba(0,0,0,0.8)]"
             >
-              <div className="w-10 h-10 rounded-lg bg-zinc-800 border border-zinc-700 text-zinc-200 flex items-center justify-center transition-all mb-3 group-hover:bg-zinc-700">
-                <Plus className="w-5 h-5" />
+              <div className="w-12 h-12 rounded-2xl bg-[#090B0E] border border-white/[0.1] text-lime-400 flex items-center justify-center transition-all mb-4 group-hover:scale-110 shadow-[0_0_20px_rgba(163,230,53,0.3)]">
+                <Plus className="w-6 h-6 stroke-[2.5]" />
               </div>
-              <h3 className="text-sm font-semibold text-zinc-200 group-hover:text-white transition-colors">
-                Create New Resume
+              <h3 className="text-sm font-bold text-white uppercase tracking-wider font-mono group-hover:text-lime-400 transition-colors">
+                Initialize New Flight Resume
               </h3>
-              <p className="text-xs text-zinc-400 mt-1 max-w-xs">
-                Select an ATS template or import from an existing PDF or DOCX file.
+              <p className="text-xs text-zinc-400 mt-1.5 max-w-xs font-mono leading-relaxed">
+                Configure ATS-compliant resume or scan existing document.
               </p>
             </div>
 
-            {/* Saved Resumes List */}
+            {/* Saved Resumes List styled as Avionics Flight Records */}
             {filteredSavedResumes.map((resume) => {
               const preset = COUNTRY_PRESETS[resume.country_preset] || COUNTRY_PRESETS.us_ca;
               const isDownloading = downloadingId === resume.id;
+              const codePrefix = resume.template_id.slice(0, 3).toUpperCase();
 
               return (
                 <div
                   key={resume.id}
-                  onClick={() => loadResume(resume.id)}
-                  className="group rounded-xl border border-zinc-800 bg-zinc-900/40 hover:border-zinc-700 hover:bg-zinc-900/70 p-5 cursor-pointer transition-all duration-200 flex flex-col justify-between"
+                  className="group relative flex flex-col justify-between rounded-[32px] overflow-hidden border border-white/[0.08] transition-all duration-300 hover:border-lime-500/30 hover:-translate-y-1"
+                  style={{
+                    background: 'linear-gradient(180deg, #12151B 0%, #161A22 100%)',
+                    boxShadow:
+                      'inset 0 1px 1px rgba(255, 255, 255, 0.15), inset 0 -2px 5px rgba(0, 0, 0, 0.8), 0 20px 40px -10px rgba(0, 0, 0, 0.75)',
+                  }}
                 >
-                  <div>
-                    <div className="flex items-center justify-between mb-2.5">
-                      <span className="text-[10px] font-mono font-medium px-2 py-0.5 rounded-full bg-zinc-800 text-zinc-300 border border-zinc-700">
-                        {preset.flag} {preset.paperSize.toUpperCase()}
-                      </span>
-                      <span className="text-[11px] font-mono text-zinc-500 flex items-center gap-1">
+                  {/* Top flight info */}
+                  <div className="p-5 pb-3">
+                    <div className="flex items-start justify-between gap-3 mb-3">
+                      <div className="flex items-center gap-2 bg-[#090B0E] px-2.5 py-1 rounded-xl border border-white/[0.06]">
+                        <DotMatrixBadge code={codePrefix} size="sm" glow={true} />
+                        <span className="text-amber-500 font-bold text-xs">→</span>
+                        <DotMatrixBadge code="REC" size="sm" glow={true} />
+                      </div>
+
+                      <div className="flex items-center gap-1.5 text-[10px] font-mono text-zinc-400 bg-[#0B0D12] px-2.5 py-1 rounded-xl border border-white/[0.05]">
                         <Clock className="w-3 h-3 text-zinc-500" />
-                        {formatRelativeTime(resume.updated_at)}
-                      </span>
+                        <span>{formatRelativeTime(resume.updated_at)}</span>
+                      </div>
                     </div>
 
-                    <h3 className="text-sm font-semibold text-zinc-100 group-hover:text-white transition-colors line-clamp-1">
+                    <h3 className="text-base font-bold text-white truncate font-mono">
                       {resume.title}
                     </h3>
-                    <p className="text-xs text-zinc-400 mt-1 line-clamp-1">
-                      {resume.content.personal.fullName || 'Unnamed'} • {resume.content.personal.jobTitle || 'Role'}
+                    <p className="text-xs text-zinc-400 mt-1 truncate">
+                      {resume.content.personal.fullName || 'Alex Vance'} • {resume.content.personal.jobTitle || 'Role'}
                     </p>
 
-                    <div className="mt-4 flex flex-wrap items-center gap-1.5 text-[10px] font-mono">
-                      <span className="px-2 py-0.5 rounded-md bg-zinc-800/80 border border-zinc-700/60 text-zinc-300 capitalize">
-                        {resume.template_id.replace('_', ' ')}
+                    <div className="mt-3 flex items-center gap-2 text-[10px] font-mono">
+                      <span className="px-2 py-0.5 rounded-md bg-[#090B0E] border border-white/[0.06] text-zinc-300">
+                        {preset.flag} {preset.paperSize.toUpperCase()}
                       </span>
-                      <span className="px-2 py-0.5 rounded-md bg-zinc-800/40 text-zinc-400 border border-zinc-800">
-                        {resume.content.experience.length} exp
+                      <span className="px-2 py-0.5 rounded-md bg-[#090B0E] border border-white/[0.06] text-zinc-400">
+                        {resume.content.experience.length} EXP
+                      </span>
+                      <span className="px-2 py-0.5 rounded-md bg-[#090B0E] border border-white/[0.06] text-emerald-400">
+                        100% ATS
                       </span>
                     </div>
                   </div>
 
-                  <div className="mt-5 pt-3 border-t border-zinc-800/80 flex items-center justify-between">
-                    <span className="text-xs font-medium text-zinc-300 group-hover:text-white flex items-center gap-1">
-                      Edit <ExternalLink className="w-3 h-3 text-zinc-400" />
-                    </span>
+                  {/* Actions & Luminous slider to launch */}
+                  <div className="px-5 pb-5 pt-2 border-t border-white/[0.06]">
+                    <div className="flex items-center justify-between mb-3 text-xs">
+                      <div className="flex items-center gap-1">
+                        <button
+                          onClick={(e) => handleDownloadPdf(resume, e)}
+                          disabled={isDownloading}
+                          className="p-2 text-zinc-400 hover:text-white hover:bg-white/[0.08] rounded-xl border border-white/[0.06] transition-colors"
+                          title="Download Vector PDF"
+                        >
+                          <Download className={`w-3.5 h-3.5 ${isDownloading ? 'animate-bounce text-lime-400' : ''}`} />
+                        </button>
+                        <button
+                          onClick={(e) => handleDuplicate(resume.id, e)}
+                          className="p-2 text-zinc-400 hover:text-white hover:bg-white/[0.08] rounded-xl border border-white/[0.06] transition-colors"
+                          title="Duplicate Resume"
+                        >
+                          <Copy className="w-3.5 h-3.5" />
+                        </button>
+                        <button
+                          onClick={(e) => handleDelete(resume.id, resume.title, e)}
+                          className="p-2 text-zinc-400 hover:text-rose-400 hover:bg-rose-950/30 rounded-xl border border-white/[0.06] transition-colors"
+                          title="Delete Resume"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
 
-                    <div className="flex items-center gap-1" onClick={(e) => e.stopPropagation()}>
                       <button
-                        onClick={(e) => handleDownloadPdf(resume, e)}
-                        disabled={isDownloading}
-                        className="p-1.5 text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-md transition-colors"
-                        title="Download Vector PDF"
+                        onClick={() => loadResume(resume.id)}
+                        className="text-xs font-mono font-bold text-lime-400 hover:text-lime-300 flex items-center gap-1 cursor-pointer"
                       >
-                        <Download className={`w-3.5 h-3.5 ${isDownloading ? 'animate-bounce text-white' : ''}`} />
-                      </button>
-                      <button
-                        onClick={(e) => handleDuplicate(resume.id, e)}
-                        className="p-1.5 text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-md transition-colors"
-                        title="Duplicate Resume"
-                      >
-                        <Copy className="w-3.5 h-3.5" />
-                      </button>
-                      <button
-                        onClick={(e) => handleDelete(resume.id, resume.title, e)}
-                        className="p-1.5 text-zinc-400 hover:text-rose-400 hover:bg-rose-950/30 rounded-md transition-colors"
-                        title="Delete Resume"
-                      >
-                        <Trash2 className="w-3.5 h-3.5" />
+                        <span>OPEN BUILDER</span>
+                        <ExternalLink className="w-3 h-3" />
                       </button>
                     </div>
+
+                    <LuminousLimeSlider
+                      onActivate={() => loadResume(resume.id)}
+                      labelRight="LOAD RESUME"
+                      buttonLabel="RESUME"
+                    />
                   </div>
                 </div>
               );
@@ -613,11 +618,11 @@ export const DashboardView: React.FC = () => {
         )}
       </main>
 
-      {/* Template Preview / Gallery Modal */}
-      <TemplateGalleryModal
-        isOpen={showPreviewModal}
-        onClose={() => setShowPreviewModal(false)}
-        initialTemplateId={previewTemplateId}
+      {/* 4. FULL-SCREEN PRINT-READY A4 DOCUMENT PREVIEW MODAL */}
+      <AvionicsDocumentModal
+        isOpen={showAvionicsModal}
+        onClose={() => setShowAvionicsModal(false)}
+        templateId={selectedTemplateForPreview}
       />
 
       {/* Admin Unlock Modal */}

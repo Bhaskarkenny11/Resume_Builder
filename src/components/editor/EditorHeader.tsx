@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useResumeStore } from '../../store/useResumeStore';
 import { COUNTRY_PRESETS } from '../../lib/constants';
 import { CountryPresetId } from '../../types/resume';
-import { TemplateGalleryModal } from '../dashboard/TemplateGalleryModal';
+import { AvionicsDocumentModal } from '../dashboard/AvionicsDocumentModal';
 import { AdminAuthModal } from '../admin/AdminAuthModal';
 import { 
   ArrowLeft, 
@@ -175,8 +175,8 @@ export const EditorHeader: React.FC<EditorHeaderProps> = ({ onDownloadPdf, isGen
         </div>
       </header>
 
-      {/* Interactive Resume.io Template Selector Carousel */}
-      <TemplateGalleryModal
+      {/* Interactive Avionics Hardware Template Selector Modal */}
+      <AvionicsDocumentModal
         isOpen={showGallery}
         onClose={() => setShowGallery(false)}
       />
