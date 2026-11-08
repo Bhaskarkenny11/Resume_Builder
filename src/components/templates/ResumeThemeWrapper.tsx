@@ -50,7 +50,7 @@ export const ResumeThemeWrapper: React.FC<ResumeThemeWrapperProps> = ({
   let themeClasses = 'w-full box-border transition-all relative overflow-hidden';
 
   if (themePlacement === 'full_page') {
-    backgroundStyle.backgroundColor = hexToRgba(effectiveAccent, 0.045);
+    backgroundStyle.backgroundColor = '#ffffff';
     backgroundStyle.border = 'none';
   } else if (themePlacement === 'border') {
     backgroundStyle.backgroundColor = '#ffffff';

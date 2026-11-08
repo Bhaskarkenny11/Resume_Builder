@@ -6,12 +6,13 @@ import { ResumeBodyRenderer } from './ResumeBodyRenderer';
 
 interface TemplateProps {
   resume: ResumeRecord;
+  hideHeader?: boolean;
 }
 
-export const ModernCleanTemplate: React.FC<TemplateProps> = ({ resume }) => {
+export const ModernCleanTemplate: React.FC<TemplateProps> = ({ resume, hideHeader }) => {
   return (
     <ResumeThemeWrapper resume={resume} defaultFontFamily="font-sans">
-      <ResumeHeaderRenderer resume={resume} />
+      {!hideHeader && <ResumeHeaderRenderer resume={resume} />}
       <ResumeBodyRenderer resume={resume} />
     </ResumeThemeWrapper>
   );

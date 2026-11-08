@@ -20,9 +20,10 @@ import {
 
 interface TemplateProps {
   resume: ResumeRecord;
+  hideHeader?: boolean;
 }
 
-export const ProfessionalTemplate: React.FC<TemplateProps> = ({ resume }) => {
+export const ProfessionalTemplate: React.FC<TemplateProps> = ({ resume, hideHeader }) => {
   const { content, country_preset } = resume;
   const { personal, skills, languages, style } = content;
   const preset = COUNTRY_PRESETS[country_preset] || COUNTRY_PRESETS.us_ca;
@@ -54,69 +55,73 @@ export const ProfessionalTemplate: React.FC<TemplateProps> = ({ resume }) => {
         className="w-[32%] text-white p-6 shrink-0 flex flex-col space-y-5"
         style={{ backgroundColor: sidebarBg }}
       >
-        {/* Profile Photo */}
-        {isPhotoVisible && (
-          <div className={`w-24 h-24 overflow-hidden border-2 border-white/80 shadow-md mx-auto shrink-0 ${shapeClass}`}>
-            <img 
-              src={photoSrc} 
-              alt={personal.fullName} 
-              className={`w-full h-full object-cover ${style.photoGrayscale ? 'grayscale' : ''}`} 
-            />
-          </div>
+        {!hideHeader && (
+          <>
+            {/* Profile Photo */}
+            {isPhotoVisible && (
+              <div className={`w-24 h-24 overflow-hidden border-2 border-white/80 shadow-md mx-auto shrink-0 ${shapeClass}`}>
+                <img 
+                  src={photoSrc} 
+                  alt={personal.fullName} 
+                  className={`w-full h-full object-cover ${style.photoGrayscale ? 'grayscale' : ''}`} 
+                />
+              </div>
+            )}
+
+            {/* Name and Job Title in sidebar */}
+            <div className="text-center space-y-1 pb-3 border-b border-white/20">
+              <h1 className="text-xl font-bold tracking-tight text-white">
+                {personal.fullName || 'Your Name'}
+              </h1>
+              {personal.jobTitle && (
+                <p className="text-xs font-medium text-white/80 uppercase tracking-wider">
+                  {personal.jobTitle}
+                </p>
+              )}
+            </div>
+
+            {/* Contact Details */}
+            <div className="space-y-2.5 text-xs text-white/90">
+              <div className="font-bold text-[11px] uppercase tracking-wider text-white/70">Contact</div>
+              {personal.email && (
+                <div className="flex items-center gap-2 truncate">
+                  <Mail className="w-3.5 h-3.5 shrink-0 opacity-80" />
+                  <span className="truncate">{personal.email}</span>
+                </div>
+              )}
+              {personal.phone && (
+                <div className="flex items-center gap-2">
+                  <Phone className="w-3.5 h-3.5 shrink-0 opacity-80" />
+                  <span>{personal.phone}</span>
+                </div>
+              )}
+              {personal.location && (
+                <div className="flex items-center gap-2 truncate">
+                  <MapPin className="w-3.5 h-3.5 shrink-0 opacity-80" />
+                  <span className="truncate">{personal.location}</span>
+                </div>
+              )}
+              {personal.website && (
+                <div className="flex items-center gap-2 truncate">
+                  <Globe className="w-3.5 h-3.5 shrink-0 opacity-80" />
+                  <span className="truncate">{personal.website.replace(/^https?:\/\//, '')}</span>
+                </div>
+              )}
+              {personal.linkedin && (
+                <div className="flex items-center gap-2 truncate">
+                  <Linkedin className="w-3.5 h-3.5 shrink-0 opacity-80" />
+                  <span className="truncate">{personal.linkedin.replace(/^https?:\/\//, '')}</span>
+                </div>
+              )}
+              {personal.github && (
+                <div className="flex items-center gap-2 truncate">
+                  <Github className="w-3.5 h-3.5 shrink-0 opacity-80" />
+                  <span className="truncate">{personal.github.replace(/^https?:\/\//, '')}</span>
+                </div>
+              )}
+            </div>
+          </>
         )}
-
-        {/* Name and Job Title in sidebar */}
-        <div className="text-center space-y-1 pb-3 border-b border-white/20">
-          <h1 className="text-xl font-bold tracking-tight text-white">
-            {personal.fullName || 'Your Name'}
-          </h1>
-          {personal.jobTitle && (
-            <p className="text-xs font-medium text-white/80 uppercase tracking-wider">
-              {personal.jobTitle}
-            </p>
-          )}
-        </div>
-
-        {/* Contact Details */}
-        <div className="space-y-2.5 text-xs text-white/90">
-          <div className="font-bold text-[11px] uppercase tracking-wider text-white/70">Contact</div>
-          {personal.email && (
-            <div className="flex items-center gap-2 truncate">
-              <Mail className="w-3.5 h-3.5 shrink-0 opacity-80" />
-              <span className="truncate">{personal.email}</span>
-            </div>
-          )}
-          {personal.phone && (
-            <div className="flex items-center gap-2">
-              <Phone className="w-3.5 h-3.5 shrink-0 opacity-80" />
-              <span>{personal.phone}</span>
-            </div>
-          )}
-          {personal.location && (
-            <div className="flex items-center gap-2 truncate">
-              <MapPin className="w-3.5 h-3.5 shrink-0 opacity-80" />
-              <span className="truncate">{personal.location}</span>
-            </div>
-          )}
-          {personal.website && (
-            <div className="flex items-center gap-2 truncate">
-              <Globe className="w-3.5 h-3.5 shrink-0 opacity-80" />
-              <span className="truncate">{personal.website.replace(/^https?:\/\//, '')}</span>
-            </div>
-          )}
-          {personal.linkedin && (
-            <div className="flex items-center gap-2 truncate">
-              <Linkedin className="w-3.5 h-3.5 shrink-0 opacity-80" />
-              <span className="truncate">{personal.linkedin.replace(/^https?:\/\//, '')}</span>
-            </div>
-          )}
-          {personal.github && (
-            <div className="flex items-center gap-2 truncate">
-              <Github className="w-3.5 h-3.5 shrink-0 opacity-80" />
-              <span className="truncate">{personal.github.replace(/^https?:\/\//, '')}</span>
-            </div>
-          )}
-        </div>
 
         {/* Sidebar Skills if enabled */}
         {skills.length > 0 && (

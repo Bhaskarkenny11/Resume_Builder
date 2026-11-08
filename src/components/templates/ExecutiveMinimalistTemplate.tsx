@@ -6,12 +6,13 @@ import { ResumeBodyRenderer } from './ResumeBodyRenderer';
 
 interface TemplateProps {
   resume: ResumeRecord;
+  hideHeader?: boolean;
 }
 
-export const ExecutiveMinimalistTemplate: React.FC<TemplateProps> = ({ resume }) => {
+export const ExecutiveMinimalistTemplate: React.FC<TemplateProps> = ({ resume, hideHeader }) => {
   return (
     <ResumeThemeWrapper resume={resume} defaultFontFamily="font-serif">
-      <ResumeHeaderRenderer resume={resume} isSerif />
+      {!hideHeader && <ResumeHeaderRenderer resume={resume} isSerif />}
       <ResumeBodyRenderer 
         resume={resume} 
         headingStyleOverride={resume.content.style.sectionHeadingStyle || 'overline_underline'} 

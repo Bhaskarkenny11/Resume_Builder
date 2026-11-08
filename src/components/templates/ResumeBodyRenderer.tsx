@@ -145,7 +145,7 @@ export const ResumeBodyRenderer: React.FC<ResumeBodyRendererProps> = ({
             if (style.displaySummaryInHeader) return null;
             if (!summary || !summary.trim()) return null;
             return (
-              <section key={sectionMeta.id} data-resume-section="true" className="space-y-1">
+              <section key={sectionMeta.id} data-resume-section="true" data-section-id={sectionMeta.id} className="space-y-1">
                 {style.showSummaryHeading !== false && (
                   <SectionHeadingRenderer
                     title={sectionMeta.title || 'Professional Summary'}
@@ -173,7 +173,7 @@ export const ResumeBodyRenderer: React.FC<ResumeBodyRendererProps> = ({
             }[style.experienceColumns || 1];
 
             return (
-              <section key={sectionMeta.id} data-resume-section="true" className="space-y-2">
+              <section key={sectionMeta.id} data-resume-section="true" data-section-id={sectionMeta.id} className="space-y-2">
                 <SectionHeadingRenderer
                   title={sectionMeta.title || 'Work Experience'}
                   icon={<Briefcase className="w-3 h-3" />}
@@ -326,7 +326,7 @@ export const ResumeBodyRenderer: React.FC<ResumeBodyRendererProps> = ({
             }[style.educationColumns || 1];
 
             return (
-              <section key={sectionMeta.id} data-resume-section="true" className="space-y-1.5">
+              <section key={sectionMeta.id} data-resume-section="true" data-section-id={sectionMeta.id} className="space-y-1.5">
                 <SectionHeadingRenderer
                   title={sectionMeta.title || 'Education'}
                   icon={<GraduationCap className="w-3 h-3" />}
@@ -383,7 +383,7 @@ export const ResumeBodyRenderer: React.FC<ResumeBodyRendererProps> = ({
             const bubbleText = accentTargets.dotsBarsBubbles ? secondaryAccent : '#1e293b';
 
             return (
-              <section key={sectionMeta.id} data-resume-section="true" className="space-y-1">
+              <section key={sectionMeta.id} data-resume-section="true" data-section-id={sectionMeta.id} className="space-y-1">
                 <SectionHeadingRenderer
                   title={sectionMeta.title || 'Skills & Technologies'}
                   icon={<Wrench className="w-3 h-3" />}
@@ -485,7 +485,7 @@ export const ResumeBodyRenderer: React.FC<ResumeBodyRendererProps> = ({
             }[style.projectsColumns || 1];
 
             return (
-              <section key={sectionMeta.id} data-resume-section="true" className="space-y-1.5">
+              <section key={sectionMeta.id} data-resume-section="true" data-section-id={sectionMeta.id} className="space-y-1.5">
                 <SectionHeadingRenderer
                   title={sectionMeta.title || 'Projects'}
                   icon={<FolderGit2 className="w-3 h-3" />}
@@ -566,7 +566,7 @@ export const ResumeBodyRenderer: React.FC<ResumeBodyRendererProps> = ({
             }[style.certificatesColumns || 2];
 
             return (
-              <section key={sectionMeta.id} data-resume-section="true" className="space-y-1">
+              <section key={sectionMeta.id} data-resume-section="true" data-section-id={sectionMeta.id} className="space-y-1">
                 <SectionHeadingRenderer
                   title={sectionMeta.title || 'Certifications'}
                   icon={<Award className="w-3 h-3" />}
@@ -663,7 +663,7 @@ export const ResumeBodyRenderer: React.FC<ResumeBodyRendererProps> = ({
             const sepChar = style.languagesSeparator === 'pipe' ? '|' : style.languagesSeparator === 'comma' ? ',' : '•';
 
             return (
-              <section key={sectionMeta.id} data-resume-section="true" className="space-y-1">
+              <section key={sectionMeta.id} data-resume-section="true" data-section-id={sectionMeta.id} className="space-y-1">
                 <SectionHeadingRenderer
                   title={sectionMeta.title || 'Languages'}
                   icon={<Globe2 className="w-3 h-3" />}
@@ -742,7 +742,7 @@ export const ResumeBodyRenderer: React.FC<ResumeBodyRendererProps> = ({
             return (
               <div key={sectionMeta.id} className="space-y-3">
                 {customSections.map((sec) => (
-                  <section key={sec.id} data-resume-section="true" className="space-y-1.5">
+                  <section key={sec.id} data-resume-section="true" data-section-id={sec.id} className="space-y-1.5">
                     <SectionHeadingRenderer
                       title={sec.title}
                       icon={<Layers className="w-3 h-3" />}
