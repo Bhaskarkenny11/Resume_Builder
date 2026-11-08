@@ -65,6 +65,8 @@ export const ResumePreviewContainer: React.FC<ResumePreviewContainerProps> = ({ 
     const totalHeight = container.getBoundingClientRect().height;
     if (totalHeight === 0) return;
 
+    const isTwoColumn = currentResume.template_id === 'professional';
+
     const marginMm = currentResume.content.style.marginMm || 14;
     const marginPx = Math.round(marginMm * 3.7795); // mm to px
 
@@ -74,11 +76,15 @@ export const ResumePreviewContainer: React.FC<ResumePreviewContainerProps> = ({ 
     const page2ContentLimit = baseHeightPx - (2 * marginPx) - bottomGapPx;
 
     const headerEl = container.querySelector<HTMLElement>('[data-resume-header="true"]');
-    const headerHeight = headerEl ? headerEl.getBoundingClientRect().height : 130;
+    // In two-column template, the header is located in the left sidebar, so main column starts at top
+    const headerHeight = isTwoColumn ? 0 : (headerEl ? headerEl.getBoundingClientRect().height : 130);
 
-    const activeSections = currentResume.content.sectionOrder.filter(
-      (s) => s.enabled && s.type !== 'personal'
-    );
+    const activeSections = currentResume.content.sectionOrder.filter((s) => {
+      if (!s.enabled || s.type === 'personal') return false;
+      // In two-column template, skills and languages belong exclusively to the left sidebar
+      if (isTwoColumn && (s.type === 'skills' || s.type === 'languages')) return false;
+      return true;
+    });
 
     const pageBuckets: {
       sections: SectionMeta[];
@@ -86,12 +92,15 @@ export const ResumePreviewContainer: React.FC<ResumePreviewContainerProps> = ({ 
     }[] = [{ sections: [] }];
 
     let currentPageIdx = 0;
-    let currentUsedHeight = headerHeight; // Page 1 starts with header
+    let currentUsedHeight = headerHeight; // Page 1 starts with header (0 for two-column)
     let currentLimit = page1ContentLimit;
 
     for (const sec of activeSections) {
       const secEl = container.querySelector<HTMLElement>(`[data-section-id="${sec.id}"]`);
-      const secHeight = secEl ? secEl.getBoundingClientRect().height : 120;
+      // Skip sections that render no DOM element (e.g. empty data)
+      if (!secEl) continue;
+      const secHeight = secEl.getBoundingClientRect().height;
+      if (secHeight === 0) continue;
 
       // Check if entire section fits comfortably in remaining space
       if (currentUsedHeight + secHeight <= currentLimit) {
@@ -149,6 +158,13 @@ export const ResumePreviewContainer: React.FC<ResumePreviewContainerProps> = ({ 
     // Build discrete ResumeRecord copies for each page
     const newPages: ResumeRecord[] = pageBuckets.map((bucket, idx) => {
       const pageSecIds = new Set(bucket.sections.map((s) => s.id));
+      if (isTwoColumn && idx === 0) {
+        // Two-column Page 1 retains sidebar sections
+        currentResume.content.sectionOrder
+          .filter((s) => s.type === 'skills' || s.type === 'languages' || s.type === 'personal')
+          .forEach((s) => pageSecIds.add(s.id));
+      }
+
       let pageExp = currentResume.content.experience;
 
       if (bucket.expItemCount !== undefined) {
@@ -348,7 +364,7 @@ export const ResumePreviewContainer: React.FC<ResumePreviewContainerProps> = ({ 
                   minHeight: `${baseHeightPx}px`,
                   backgroundColor: '#ffffff',
                 }}
-                className="bg-white shadow-page-lg rounded-sm border border-slate-300/80 relative text-slate-900 overflow-hidden"
+                className="bg-white shadow-page-lg rounded-sm border border-slate-300/80 relative text-slate-900 overflow-hidden flex flex-col"
               >
                 {/* Natural, unclipped template rendering for this page */}
                 {renderTemplate(pageResume, idx > 0)}
