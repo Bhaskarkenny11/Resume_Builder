@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useResumeStore } from '../../store/useResumeStore';
-import { ProjectItem } from '../../types/resume';
-import { Plus, Trash2, Globe, Github, ChevronUp, ChevronDown } from 'lucide-react';
+import { Plus, Trash2, Globe, Github, ChevronUp, ChevronDown, FolderGit2, Tag } from 'lucide-react';
 
 export const ProjectsSection: React.FC = () => {
   const { currentResume, addProject, updateProject, removeProject } = useResumeStore();
@@ -18,16 +17,16 @@ export const ProjectsSection: React.FC = () => {
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div>
-          <h3 className="text-sm font-semibold text-slate-800">Projects & Open Source</h3>
-          <p className="text-xs text-slate-500">Showcase personal or commercial initiatives and live links</p>
+          <h3 className="text-sm font-mono font-bold text-white">Projects & Open Source</h3>
+          <p className="text-xs font-mono text-zinc-400">Personal or commercial initiatives and live links</p>
         </div>
         <button
           type="button"
           onClick={addProject}
-          className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-medium shadow-sm transition-colors"
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#12161E] hover:bg-[#181D26] border border-white/[0.1] hover:border-lime-500/40 text-lime-400 rounded-xl text-xs font-mono font-bold shadow-[inset_0_1px_1px_rgba(255,255,255,0.06)] transition-all active:scale-95 cursor-pointer"
         >
-          <Plus className="w-3.5 h-3.5" />
-          Add Project
+          <Plus className="w-3.5 h-3.5 text-lime-400" />
+          <span>Add Project</span>
         </button>
       </div>
 
@@ -37,15 +36,15 @@ export const ProjectsSection: React.FC = () => {
           return (
             <div
               key={proj.id}
-              className="bg-white border border-slate-200 rounded-xl shadow-sm hover:border-slate-300 transition-all overflow-hidden"
+              className="bg-[#0B0E14] border border-white/[0.08] hover:border-white/[0.16] rounded-2xl shadow-[inset_0_1px_1px_rgba(255,255,255,0.04),0_6px_20px_rgba(0,0,0,0.4)] transition-all overflow-hidden"
             >
-              <div className="flex items-center justify-between p-3.5 bg-slate-50/70 border-b border-slate-100">
+              <div className="flex items-center justify-between p-3.5 bg-[#0E1218] border-b border-white/[0.08]">
                 <div onClick={() => toggleOpen(proj.id)} className="flex-1 cursor-pointer">
-                  <span className="text-sm font-semibold text-slate-800">
+                  <span className="text-xs sm:text-sm font-mono font-bold text-white">
                     {proj.title || 'Untitled Project'}
                   </span>
                   {proj.subtitle && (
-                    <span className="text-xs text-slate-500 ml-2">
+                    <span className="text-xs font-mono text-zinc-400 ml-2">
                       ({proj.subtitle})
                     </span>
                   )}
@@ -54,14 +53,14 @@ export const ProjectsSection: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => removeProject(proj.id)}
-                    className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors"
+                    className="p-1.5 text-zinc-400 hover:text-rose-400 hover:bg-rose-950/30 rounded-lg transition-colors"
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>
                   <button
                     type="button"
                     onClick={() => toggleOpen(proj.id)}
-                    className="p-1.5 text-slate-400 hover:text-slate-600 rounded-lg"
+                    className="p-1.5 text-zinc-400 hover:text-white rounded-lg transition-colors"
                   >
                     {isOpen ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
                   </button>
@@ -69,69 +68,88 @@ export const ProjectsSection: React.FC = () => {
               </div>
 
               {isOpen && (
-                <div className="p-4 space-y-3">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div className="p-4 space-y-3.5 bg-[#0E1218]/40">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+                    {/* Project Name */}
                     <div>
-                      <label className="block text-xs font-medium text-slate-700 mb-1">
+                      <label className="block text-[11px] font-mono font-medium text-zinc-300 mb-1.5">
                         Project Name
                       </label>
-                      <input
-                        type="text"
-                        value={proj.title}
-                        onChange={(e) => updateProject(proj.id, { title: e.target.value })}
-                        placeholder="e.g. KubePulse"
-                        className="w-full px-3 py-1.5 text-sm bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
-                      />
+                      <div className="group relative flex items-center bg-[#090C10] border border-white/[0.09] hover:border-white/[0.18] focus-within:border-lime-500/50 focus-within:shadow-[0_0_12px_rgba(163,230,53,0.18)] focus-within:ring-1 focus-within:ring-lime-500/30 rounded-xl transition-all shadow-[inset_0_2px_4px_rgba(0,0,0,0.7)] p-1">
+                        <div className="w-7 h-7 rounded-lg bg-white/[0.05] backdrop-blur-md border border-white/[0.12] shadow-[inset_0_1px_1px_rgba(255,255,255,0.2)] flex items-center justify-center text-zinc-400 group-focus-within:text-lime-400 group-focus-within:border-lime-500/40 transition-all shrink-0 ml-0.5">
+                          <FolderGit2 className="w-3.5 h-3.5" />
+                        </div>
+                        <input
+                          type="text"
+                          value={proj.title}
+                          onChange={(e) => updateProject(proj.id, { title: e.target.value })}
+                          placeholder="e.g. KubePulse"
+                          className="w-full px-2.5 py-1.5 text-xs sm:text-sm bg-transparent text-zinc-100 placeholder:text-zinc-500 focus:outline-none font-sans"
+                        />
+                      </div>
                     </div>
 
+                    {/* Subtitle */}
                     <div>
-                      <label className="block text-xs font-medium text-slate-700 mb-1">
+                      <label className="block text-[11px] font-mono font-medium text-zinc-300 mb-1.5">
                         Short Subtitle / Role
                       </label>
-                      <input
-                        type="text"
-                        value={proj.subtitle || ''}
-                        onChange={(e) => updateProject(proj.id, { subtitle: e.target.value })}
-                        placeholder="e.g. Distributed Telemetry Agent"
-                        className="w-full px-3 py-1.5 text-sm bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
-                      />
+                      <div className="group relative flex items-center bg-[#090C10] border border-white/[0.09] hover:border-white/[0.18] focus-within:border-lime-500/50 focus-within:shadow-[0_0_12px_rgba(163,230,53,0.18)] focus-within:ring-1 focus-within:ring-lime-500/30 rounded-xl transition-all shadow-[inset_0_2px_4px_rgba(0,0,0,0.7)] p-1">
+                        <div className="w-7 h-7 rounded-lg bg-white/[0.05] backdrop-blur-md border border-white/[0.12] shadow-[inset_0_1px_1px_rgba(255,255,255,0.2)] flex items-center justify-center text-zinc-400 group-focus-within:text-lime-400 group-focus-within:border-lime-500/40 transition-all shrink-0 ml-0.5">
+                          <Tag className="w-3.5 h-3.5" />
+                        </div>
+                        <input
+                          type="text"
+                          value={proj.subtitle || ''}
+                          onChange={(e) => updateProject(proj.id, { subtitle: e.target.value })}
+                          placeholder="e.g. Distributed Telemetry Agent"
+                          className="w-full px-2.5 py-1.5 text-xs sm:text-sm bg-transparent text-zinc-100 placeholder:text-zinc-500 focus:outline-none font-sans"
+                        />
+                      </div>
                     </div>
 
+                    {/* Live Demo */}
                     <div>
-                      <label className="block text-xs font-medium text-slate-700 mb-1">
+                      <label className="block text-[11px] font-mono font-medium text-zinc-300 mb-1.5">
                         Live Demo Link
                       </label>
-                      <div className="relative">
-                        <Globe className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-2.5" />
+                      <div className="group relative flex items-center bg-[#090C10] border border-white/[0.09] hover:border-white/[0.18] focus-within:border-lime-500/50 focus-within:shadow-[0_0_12px_rgba(163,230,53,0.18)] focus-within:ring-1 focus-within:ring-lime-500/30 rounded-xl transition-all shadow-[inset_0_2px_4px_rgba(0,0,0,0.7)] p-1">
+                        <div className="w-7 h-7 rounded-lg bg-white/[0.05] backdrop-blur-md border border-white/[0.12] shadow-[inset_0_1px_1px_rgba(255,255,255,0.2)] flex items-center justify-center text-zinc-400 group-focus-within:text-lime-400 group-focus-within:border-lime-500/40 transition-all shrink-0 ml-0.5">
+                          <Globe className="w-3.5 h-3.5" />
+                        </div>
                         <input
                           type="text"
                           value={proj.link || ''}
                           onChange={(e) => updateProject(proj.id, { link: e.target.value })}
                           placeholder="https://myproject.com"
-                          className="w-full pl-8 pr-3 py-1.5 text-xs bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+                          className="w-full px-2.5 py-1.5 text-xs sm:text-sm bg-transparent text-zinc-100 placeholder:text-zinc-500 focus:outline-none font-sans"
                         />
                       </div>
                     </div>
 
+                    {/* GitHub Link */}
                     <div>
-                      <label className="block text-xs font-medium text-slate-700 mb-1">
+                      <label className="block text-[11px] font-mono font-medium text-zinc-300 mb-1.5">
                         GitHub / Repo Link
                       </label>
-                      <div className="relative">
-                        <Github className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-2.5" />
+                      <div className="group relative flex items-center bg-[#090C10] border border-white/[0.09] hover:border-white/[0.18] focus-within:border-lime-500/50 focus-within:shadow-[0_0_12px_rgba(163,230,53,0.18)] focus-within:ring-1 focus-within:ring-lime-500/30 rounded-xl transition-all shadow-[inset_0_2px_4px_rgba(0,0,0,0.7)] p-1">
+                        <div className="w-7 h-7 rounded-lg bg-white/[0.05] backdrop-blur-md border border-white/[0.12] shadow-[inset_0_1px_1px_rgba(255,255,255,0.2)] flex items-center justify-center text-zinc-400 group-focus-within:text-lime-400 group-focus-within:border-lime-500/40 transition-all shrink-0 ml-0.5">
+                          <Github className="w-3.5 h-3.5" />
+                        </div>
                         <input
                           type="text"
                           value={proj.githubUrl || ''}
                           onChange={(e) => updateProject(proj.id, { githubUrl: e.target.value })}
                           placeholder="github.com/user/repo"
-                          className="w-full pl-8 pr-3 py-1.5 text-xs bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+                          className="w-full px-2.5 py-1.5 text-xs sm:text-sm bg-transparent text-zinc-100 placeholder:text-zinc-500 focus:outline-none font-sans"
                         />
                       </div>
                     </div>
                   </div>
 
+                  {/* Description */}
                   <div>
-                    <label className="block text-xs font-medium text-slate-700 mb-1">
+                    <label className="block text-[11px] font-mono font-medium text-zinc-300 mb-1.5">
                       Description & Impact
                     </label>
                     <textarea
@@ -139,7 +157,7 @@ export const ProjectsSection: React.FC = () => {
                       value={proj.description}
                       onChange={(e) => updateProject(proj.id, { description: e.target.value })}
                       placeholder="• Engineered with Go, React, and eBPF. Starred by 3k+ developers..."
-                      className="w-full p-2.5 text-xs bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500/20 leading-relaxed"
+                      className="w-full p-3 text-xs sm:text-sm bg-[#090C10] border border-white/[0.09] hover:border-white/[0.18] focus:border-lime-500/50 focus:shadow-[0_0_12px_rgba(163,230,53,0.18)] focus:ring-1 focus:ring-lime-500/30 rounded-xl text-zinc-100 placeholder:text-zinc-500 shadow-[inset_0_2px_4px_rgba(0,0,0,0.7)] transition-all focus:outline-none leading-relaxed font-sans"
                     />
                   </div>
                 </div>
@@ -147,6 +165,19 @@ export const ProjectsSection: React.FC = () => {
             </div>
           );
         })}
+
+        {projects.length === 0 && (
+          <div className="p-8 text-center border-2 border-dashed border-white/[0.1] rounded-2xl bg-[#090C10] shadow-[inset_0_2px_6px_rgba(0,0,0,0.7)]">
+            <p className="text-xs font-mono text-zinc-400">No project showcases added yet.</p>
+            <button
+              type="button"
+              onClick={addProject}
+              className="mt-2 text-xs font-mono font-bold text-lime-400 hover:underline"
+            >
+              + Add your first project
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

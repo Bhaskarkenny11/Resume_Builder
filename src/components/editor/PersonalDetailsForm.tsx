@@ -3,6 +3,7 @@ import { useResumeStore } from '../../store/useResumeStore';
 import { COUNTRY_PRESETS } from '../../lib/constants';
 import { 
   User, 
+  Briefcase,
   Mail, 
   Phone, 
   MapPin, 
@@ -70,7 +71,7 @@ export const PersonalDetailsForm: React.FC = () => {
   return (
     <div className="space-y-4">
       {/* Universal Headshot / Photo Option (Available for all resumes) */}
-      <div className="bg-slate-50 border border-slate-200/90 rounded-2xl p-4 transition-all">
+      <div className="bg-[#0B0E14] border border-white/[0.08] rounded-2xl p-4 shadow-[inset_0_2px_5px_rgba(0,0,0,0.7)] transition-all">
         <input
           ref={fileInputRef}
           type="file"
@@ -83,14 +84,14 @@ export const PersonalDetailsForm: React.FC = () => {
           /* Empty State: Call to Action to Add Photo */
           <div className="flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
             <div className="flex items-center gap-3">
-              <div className="w-11 h-11 rounded-2xl bg-blue-50 border border-blue-200 text-blue-600 flex items-center justify-center shrink-0">
-                <Camera className="w-5 h-5" />
+              <div className="w-11 h-11 rounded-xl bg-white/[0.05] backdrop-blur-md border border-white/[0.12] text-zinc-300 flex items-center justify-center shrink-0 shadow-[inset_0_1px_1px_rgba(255,255,255,0.2)]">
+                <Camera className="w-5 h-5 text-lime-400" />
               </div>
               <div>
-                <h4 className="text-xs font-bold text-slate-800">
+                <h4 className="text-xs font-mono font-bold text-white">
                   Profile Photo (Optional)
                 </h4>
-                <p className="text-[11px] text-slate-500">
+                <p className="text-[11px] font-mono text-zinc-400">
                   Add a professional headshot to include on this resume.
                 </p>
               </div>
@@ -99,9 +100,11 @@ export const PersonalDetailsForm: React.FC = () => {
             <button
               type="button"
               onClick={() => fileInputRef.current?.click()}
-              className="px-3.5 py-1.5 bg-white hover:bg-slate-100 border border-slate-300 hover:border-slate-400 text-slate-700 rounded-xl text-xs font-semibold shadow-2xs transition-all flex items-center gap-1.5 cursor-pointer shrink-0"
+              className="px-3.5 py-1.5 bg-[#12161E] hover:bg-[#181D26] border border-white/[0.1] hover:border-lime-500/40 text-zinc-200 hover:text-white rounded-xl text-xs font-mono font-medium shadow-[inset_0_1px_1px_rgba(255,255,255,0.06)] transition-all flex items-center gap-1.5 cursor-pointer shrink-0"
             >
-              <Camera className="w-3.5 h-3.5 text-blue-600" />
+              <div className="w-5 h-5 rounded-md bg-white/[0.06] backdrop-blur-sm border border-white/[0.1] flex items-center justify-center">
+                <Camera className="w-3 h-3 text-lime-400" />
+              </div>
               <span>Add Photo</span>
             </button>
           </div>
@@ -112,8 +115,8 @@ export const PersonalDetailsForm: React.FC = () => {
               {/* Photo Thumbnail */}
               <div 
                 onClick={() => fileInputRef.current?.click()}
-                className={`relative group w-14 h-14 overflow-hidden border-2 bg-slate-200 shrink-0 cursor-pointer shadow-sm transition-all ${
-                  !isPhotoVisible ? 'opacity-40 grayscale border-slate-300' : 'border-blue-500'
+                className={`relative group w-14 h-14 overflow-hidden border-2 bg-[#090C10] shrink-0 cursor-pointer shadow-lg transition-all ${
+                  !isPhotoVisible ? 'opacity-40 grayscale border-zinc-700' : 'border-lime-400/80 shadow-[0_0_12px_rgba(163,230,53,0.2)]'
                 } ${
                   photoShape === 'circle' ? 'rounded-full' : photoShape === 'square' ? 'rounded-none' : 'rounded-xl'
                 }`}
@@ -124,18 +127,18 @@ export const PersonalDetailsForm: React.FC = () => {
                   alt="Headshot"
                   className="w-full h-full object-cover"
                 />
-                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white">
-                  <Camera className="w-4 h-4" />
+                <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white">
+                  <Camera className="w-4 h-4 text-lime-400" />
                 </div>
               </div>
 
               <div>
                 <div className="flex items-center gap-2">
-                  <h4 className="text-xs font-bold text-slate-900">Profile Photo</h4>
-                  <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
+                  <h4 className="text-xs font-mono font-bold text-white">Profile Photo</h4>
+                  <span className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-full border ${
                     isPhotoVisible 
-                      ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                      : 'bg-slate-200 text-slate-600'
+                      ? 'bg-emerald-950/60 text-emerald-400 border-emerald-800/60'
+                      : 'bg-zinc-800 text-zinc-400 border-zinc-700'
                   }`}>
                     {isPhotoVisible ? 'Visible on Resume' : 'Hidden on Resume'}
                   </span>
@@ -143,16 +146,16 @@ export const PersonalDetailsForm: React.FC = () => {
 
                 {/* Photo Shape Buttons */}
                 <div className="flex items-center gap-1.5 mt-2">
-                  <span className="text-[10px] font-medium text-slate-500">Shape:</span>
+                  <span className="text-[10px] font-mono text-zinc-400">Shape:</span>
                   {(['circle', 'rounded', 'square'] as const).map((shape) => (
                     <button
                       key={shape}
                       type="button"
                       onClick={() => setPhotoShape(shape)}
-                      className={`px-2 py-0.5 text-[10px] font-semibold rounded-md capitalize transition-all ${
+                      className={`px-2.5 py-0.5 text-[10px] font-mono font-semibold rounded-lg capitalize transition-all border ${
                         photoShape === shape
-                          ? 'bg-blue-600 text-white shadow-2xs'
-                          : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-100'
+                          ? 'bg-lime-400 text-black border-lime-400 shadow-[0_0_10px_rgba(163,230,53,0.3)]'
+                          : 'bg-[#12161E] border-white/[0.08] text-zinc-400 hover:text-white hover:bg-[#161B24]'
                       }`}
                     >
                       {shape}
@@ -167,21 +170,23 @@ export const PersonalDetailsForm: React.FC = () => {
               <button
                 type="button"
                 onClick={toggleShowPhoto}
-                className={`px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all ${
+                className={`px-3 py-1.5 rounded-xl text-xs font-mono font-semibold flex items-center gap-1.5 transition-all border ${
                   isPhotoVisible
-                    ? 'bg-slate-200/80 hover:bg-slate-300 text-slate-800'
-                    : 'bg-blue-600 hover:bg-blue-500 text-white shadow-sm'
+                    ? 'bg-[#12161E] border-white/[0.08] hover:bg-[#181D26] text-zinc-300'
+                    : 'bg-lime-400 text-black border-lime-400 shadow-[0_0_10px_rgba(163,230,53,0.3)]'
                 }`}
                 title={isPhotoVisible ? 'Hide photo on this resume' : 'Show photo on this resume'}
               >
-                {isPhotoVisible ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+                <div className="w-4 h-4 rounded bg-white/[0.08] backdrop-blur-sm flex items-center justify-center">
+                  {isPhotoVisible ? <EyeOff className="w-3 h-3" /> : <Eye className="w-3 h-3 text-black" />}
+                </div>
                 <span>{isPhotoVisible ? 'Hide' : 'Show Photo'}</span>
               </button>
 
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
-                className="px-2.5 py-1.5 bg-white hover:bg-slate-100 border border-slate-200 text-slate-700 rounded-xl text-xs font-medium transition-colors shadow-2xs"
+                className="px-2.5 py-1.5 bg-[#12161E] hover:bg-[#181D26] border border-white/[0.08] hover:border-white/[0.18] text-zinc-300 hover:text-white rounded-xl text-xs font-mono font-medium transition-colors"
                 title="Change Photo"
               >
                 Change
@@ -190,7 +195,7 @@ export const PersonalDetailsForm: React.FC = () => {
               <button
                 type="button"
                 onClick={removePhoto}
-                className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-colors"
+                className="p-1.5 text-zinc-400 hover:text-rose-400 hover:bg-rose-950/30 rounded-xl transition-colors border border-transparent hover:border-rose-900/40"
                 title="Remove Photo"
               >
                 <Trash2 className="w-4 h-4" />
@@ -202,127 +207,158 @@ export const PersonalDetailsForm: React.FC = () => {
 
       {/* Main Core Fields */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+        {/* Full Name */}
         <div>
-          <label className="block text-[11px] font-semibold text-slate-700 mb-1">
-            Full Name <span className="text-rose-500">*</span>
+          <label className="block text-[11px] font-mono font-medium text-zinc-300 mb-1.5 flex items-center justify-between">
+            <span>Full Name</span>
+            <span className="text-lime-400 text-xs">*</span>
           </label>
-          <div className="relative">
-            <User className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-2.5" />
+          <div className="group relative flex items-center bg-[#090C10] border border-white/[0.09] hover:border-white/[0.18] focus-within:border-lime-500/50 focus-within:shadow-[0_0_12px_rgba(163,230,53,0.18)] focus-within:ring-1 focus-within:ring-lime-500/30 rounded-xl transition-all shadow-[inset_0_2px_4px_rgba(0,0,0,0.7)] p-1">
+            <div className="w-7 h-7 rounded-lg bg-white/[0.05] backdrop-blur-md border border-white/[0.12] shadow-[inset_0_1px_1px_rgba(255,255,255,0.2)] flex items-center justify-center text-zinc-400 group-focus-within:text-lime-400 group-focus-within:border-lime-500/40 transition-all shrink-0 ml-0.5">
+              <User className="w-3.5 h-3.5" />
+            </div>
             <input
               type="text"
               value={personal.fullName}
               onChange={(e) => updatePersonalDetails({ fullName: e.target.value })}
-              placeholder="e.g. Bhaskar Yerrolla"
-              className="w-full pl-8 pr-3 py-1.5 text-xs bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium"
+              placeholder="e.g. Alex Vance"
+              className="w-full px-2.5 py-1.5 text-xs sm:text-sm bg-transparent text-zinc-100 placeholder:text-zinc-500 focus:outline-none font-sans"
             />
           </div>
         </div>
 
+        {/* Job Title */}
         <div>
-          <label className="block text-[11px] font-semibold text-slate-700 mb-1">
-            Professional Job Title <span className="text-rose-500">*</span>
+          <label className="block text-[11px] font-mono font-medium text-zinc-300 mb-1.5 flex items-center justify-between">
+            <span>Professional Job Title</span>
+            <span className="text-lime-400 text-xs">*</span>
           </label>
-          <input
-            type="text"
-            value={personal.jobTitle}
-            onChange={(e) => updatePersonalDetails({ jobTitle: e.target.value })}
-            placeholder="e.g. Full Stack Developer"
-            className="w-full px-3 py-1.5 text-xs bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all font-medium"
-          />
+          <div className="group relative flex items-center bg-[#090C10] border border-white/[0.09] hover:border-white/[0.18] focus-within:border-lime-500/50 focus-within:shadow-[0_0_12px_rgba(163,230,53,0.18)] focus-within:ring-1 focus-within:ring-lime-500/30 rounded-xl transition-all shadow-[inset_0_2px_4px_rgba(0,0,0,0.7)] p-1">
+            <div className="w-7 h-7 rounded-lg bg-white/[0.05] backdrop-blur-md border border-white/[0.12] shadow-[inset_0_1px_1px_rgba(255,255,255,0.2)] flex items-center justify-center text-zinc-400 group-focus-within:text-lime-400 group-focus-within:border-lime-500/40 transition-all shrink-0 ml-0.5">
+              <Briefcase className="w-3.5 h-3.5" />
+            </div>
+            <input
+              type="text"
+              value={personal.jobTitle}
+              onChange={(e) => updatePersonalDetails({ jobTitle: e.target.value })}
+              placeholder="e.g. Lead Solutions Architect"
+              className="w-full px-2.5 py-1.5 text-xs sm:text-sm bg-transparent text-zinc-100 placeholder:text-zinc-500 focus:outline-none font-sans"
+            />
+          </div>
         </div>
 
+        {/* Email */}
         <div>
-          <label className="block text-[11px] font-semibold text-slate-700 mb-1">
-            Email Address <span className="text-rose-500">*</span>
+          <label className="block text-[11px] font-mono font-medium text-zinc-300 mb-1.5 flex items-center justify-between">
+            <span>Email Address</span>
+            <span className="text-lime-400 text-xs">*</span>
           </label>
-          <div className="relative">
-            <Mail className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-2.5" />
+          <div className="group relative flex items-center bg-[#090C10] border border-white/[0.09] hover:border-white/[0.18] focus-within:border-lime-500/50 focus-within:shadow-[0_0_12px_rgba(163,230,53,0.18)] focus-within:ring-1 focus-within:ring-lime-500/30 rounded-xl transition-all shadow-[inset_0_2px_4px_rgba(0,0,0,0.7)] p-1">
+            <div className="w-7 h-7 rounded-lg bg-white/[0.05] backdrop-blur-md border border-white/[0.12] shadow-[inset_0_1px_1px_rgba(255,255,255,0.2)] flex items-center justify-center text-zinc-400 group-focus-within:text-lime-400 group-focus-within:border-lime-500/40 transition-all shrink-0 ml-0.5">
+              <Mail className="w-3.5 h-3.5" />
+            </div>
             <input
               type="email"
               value={personal.email}
               onChange={(e) => updatePersonalDetails({ email: e.target.value })}
               placeholder="name@example.com"
-              className="w-full pl-8 pr-3 py-1.5 text-xs bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+              className="w-full px-2.5 py-1.5 text-xs sm:text-sm bg-transparent text-zinc-100 placeholder:text-zinc-500 focus:outline-none font-sans"
             />
           </div>
         </div>
 
+        {/* Phone */}
         <div>
-          <label className="block text-[11px] font-semibold text-slate-700 mb-1">
-            Phone Number <span className="text-rose-500">*</span>
+          <label className="block text-[11px] font-mono font-medium text-zinc-300 mb-1.5 flex items-center justify-between">
+            <span>Phone Number</span>
+            <span className="text-lime-400 text-xs">*</span>
           </label>
-          <div className="relative">
-            <Phone className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-2.5" />
+          <div className="group relative flex items-center bg-[#090C10] border border-white/[0.09] hover:border-white/[0.18] focus-within:border-lime-500/50 focus-within:shadow-[0_0_12px_rgba(163,230,53,0.18)] focus-within:ring-1 focus-within:ring-lime-500/30 rounded-xl transition-all shadow-[inset_0_2px_4px_rgba(0,0,0,0.7)] p-1">
+            <div className="w-7 h-7 rounded-lg bg-white/[0.05] backdrop-blur-md border border-white/[0.12] shadow-[inset_0_1px_1px_rgba(255,255,255,0.2)] flex items-center justify-center text-zinc-400 group-focus-within:text-lime-400 group-focus-within:border-lime-500/40 transition-all shrink-0 ml-0.5">
+              <Phone className="w-3.5 h-3.5" />
+            </div>
             <input
               type="text"
               value={personal.phone}
               onChange={(e) => updatePersonalDetails({ phone: e.target.value })}
               placeholder="+1 (555) 123-4567"
-              className="w-full pl-8 pr-3 py-1.5 text-xs bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+              className="w-full px-2.5 py-1.5 text-xs sm:text-sm bg-transparent text-zinc-100 placeholder:text-zinc-500 focus:outline-none font-sans"
             />
           </div>
         </div>
 
+        {/* Location */}
         <div>
-          <label className="block text-[11px] font-semibold text-slate-700 mb-1">
+          <label className="block text-[11px] font-mono font-medium text-zinc-300 mb-1.5">
             Location
           </label>
-          <div className="relative">
-            <MapPin className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-2.5" />
+          <div className="group relative flex items-center bg-[#090C10] border border-white/[0.09] hover:border-white/[0.18] focus-within:border-lime-500/50 focus-within:shadow-[0_0_12px_rgba(163,230,53,0.18)] focus-within:ring-1 focus-within:ring-lime-500/30 rounded-xl transition-all shadow-[inset_0_2px_4px_rgba(0,0,0,0.7)] p-1">
+            <div className="w-7 h-7 rounded-lg bg-white/[0.05] backdrop-blur-md border border-white/[0.12] shadow-[inset_0_1px_1px_rgba(255,255,255,0.2)] flex items-center justify-center text-zinc-400 group-focus-within:text-lime-400 group-focus-within:border-lime-500/40 transition-all shrink-0 ml-0.5">
+              <MapPin className="w-3.5 h-3.5" />
+            </div>
             <input
               type="text"
               value={personal.location}
               onChange={(e) => updatePersonalDetails({ location: e.target.value })}
-              placeholder="City, State / Country"
-              className="w-full pl-8 pr-3 py-1.5 text-xs bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+              placeholder="San Francisco, CA"
+              className="w-full px-2.5 py-1.5 text-xs sm:text-sm bg-transparent text-zinc-100 placeholder:text-zinc-500 focus:outline-none font-sans"
             />
           </div>
         </div>
 
+        {/* Website */}
         <div>
-          <label className="block text-[11px] font-semibold text-slate-700 mb-1">
+          <label className="block text-[11px] font-mono font-medium text-zinc-300 mb-1.5">
             Portfolio / Website
           </label>
-          <div className="relative">
-            <Globe className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-2.5" />
+          <div className="group relative flex items-center bg-[#090C10] border border-white/[0.09] hover:border-white/[0.18] focus-within:border-lime-500/50 focus-within:shadow-[0_0_12px_rgba(163,230,53,0.18)] focus-within:ring-1 focus-within:ring-lime-500/30 rounded-xl transition-all shadow-[inset_0_2px_4px_rgba(0,0,0,0.7)] p-1">
+            <div className="w-7 h-7 rounded-lg bg-white/[0.05] backdrop-blur-md border border-white/[0.12] shadow-[inset_0_1px_1px_rgba(255,255,255,0.2)] flex items-center justify-center text-zinc-400 group-focus-within:text-lime-400 group-focus-within:border-lime-500/40 transition-all shrink-0 ml-0.5">
+              <Globe className="w-3.5 h-3.5" />
+            </div>
             <input
               type="text"
               value={personal.website || ''}
               onChange={(e) => updatePersonalDetails({ website: e.target.value })}
-              placeholder="yourportfolio.vercel.app"
-              className="w-full pl-8 pr-3 py-1.5 text-xs bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+              placeholder="alexvance.dev"
+              className="w-full px-2.5 py-1.5 text-xs sm:text-sm bg-transparent text-zinc-100 placeholder:text-zinc-500 focus:outline-none font-sans"
             />
           </div>
         </div>
 
+        {/* LinkedIn */}
         <div>
-          <label className="block text-[11px] font-semibold text-slate-700 mb-1">
+          <label className="block text-[11px] font-mono font-medium text-zinc-300 mb-1.5">
             LinkedIn Profile
           </label>
-          <div className="relative">
-            <Linkedin className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-2.5" />
+          <div className="group relative flex items-center bg-[#090C10] border border-white/[0.09] hover:border-white/[0.18] focus-within:border-lime-500/50 focus-within:shadow-[0_0_12px_rgba(163,230,53,0.18)] focus-within:ring-1 focus-within:ring-lime-500/30 rounded-xl transition-all shadow-[inset_0_2px_4px_rgba(0,0,0,0.7)] p-1">
+            <div className="w-7 h-7 rounded-lg bg-white/[0.05] backdrop-blur-md border border-white/[0.12] shadow-[inset_0_1px_1px_rgba(255,255,255,0.2)] flex items-center justify-center text-zinc-400 group-focus-within:text-lime-400 group-focus-within:border-lime-500/40 transition-all shrink-0 ml-0.5">
+              <Linkedin className="w-3.5 h-3.5" />
+            </div>
             <input
               type="text"
               value={personal.linkedin || ''}
               onChange={(e) => updatePersonalDetails({ linkedin: e.target.value })}
-              placeholder="linkedin.com/in/username"
-              className="w-full pl-8 pr-3 py-1.5 text-xs bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+              placeholder="linkedin.com/in/alexvance-cloud"
+              className="w-full px-2.5 py-1.5 text-xs sm:text-sm bg-transparent text-zinc-100 placeholder:text-zinc-500 focus:outline-none font-sans"
             />
           </div>
         </div>
 
+        {/* GitHub */}
         <div>
-          <label className="block text-[11px] font-semibold text-slate-700 mb-1">
+          <label className="block text-[11px] font-mono font-medium text-zinc-300 mb-1.5">
             GitHub Profile
           </label>
-          <div className="relative">
-            <Github className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-2.5" />
+          <div className="group relative flex items-center bg-[#090C10] border border-white/[0.09] hover:border-white/[0.18] focus-within:border-lime-500/50 focus-within:shadow-[0_0_12px_rgba(163,230,53,0.18)] focus-within:ring-1 focus-within:ring-lime-500/30 rounded-xl transition-all shadow-[inset_0_2px_4px_rgba(0,0,0,0.7)] p-1">
+            <div className="w-7 h-7 rounded-lg bg-white/[0.05] backdrop-blur-md border border-white/[0.12] shadow-[inset_0_1px_1px_rgba(255,255,255,0.2)] flex items-center justify-center text-zinc-400 group-focus-within:text-lime-400 group-focus-within:border-lime-500/40 transition-all shrink-0 ml-0.5">
+              <Github className="w-3.5 h-3.5" />
+            </div>
             <input
               type="text"
               value={personal.github || ''}
               onChange={(e) => updatePersonalDetails({ github: e.target.value })}
-              placeholder="github.com/username"
-              className="w-full pl-8 pr-3 py-1.5 text-xs bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+              placeholder="github.com/alexvance"
+              className="w-full px-2.5 py-1.5 text-xs sm:text-sm bg-transparent text-zinc-100 placeholder:text-zinc-500 focus:outline-none font-sans"
             />
           </div>
         </div>
@@ -330,23 +366,25 @@ export const PersonalDetailsForm: React.FC = () => {
 
       {/* Dynamic International Fields (only visible if country preset requires it) */}
       {(features.birthDate || features.birthPlace || features.nationality || features.visaStatus || features.drivingLicense) && (
-        <div className="pt-3 border-t border-slate-100">
-          <h4 className="text-[11px] font-bold text-slate-600 uppercase tracking-wider mb-2.5">
+        <div className="pt-3 border-t border-white/[0.08]">
+          <h4 className="text-[11px] font-mono font-bold text-zinc-400 uppercase tracking-wider mb-2.5">
             {presetConfig.name} Requirements
           </h4>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {features.birthDate && (
               <div>
-                <label className="block text-[11px] font-semibold text-slate-700 mb-1">
+                <label className="block text-[11px] font-mono font-medium text-zinc-300 mb-1.5">
                   Date of Birth
                 </label>
-                <div className="relative">
-                  <Calendar className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-2.5" />
+                <div className="group relative flex items-center bg-[#090C10] border border-white/[0.09] hover:border-white/[0.18] focus-within:border-lime-500/50 focus-within:shadow-[0_0_12px_rgba(163,230,53,0.18)] focus-within:ring-1 focus-within:ring-lime-500/30 rounded-xl transition-all shadow-[inset_0_2px_4px_rgba(0,0,0,0.7)] p-1">
+                  <div className="w-7 h-7 rounded-lg bg-white/[0.05] backdrop-blur-md border border-white/[0.12] shadow-[inset_0_1px_1px_rgba(255,255,255,0.2)] flex items-center justify-center text-zinc-400 group-focus-within:text-lime-400 group-focus-within:border-lime-500/40 transition-all shrink-0 ml-0.5">
+                    <Calendar className="w-3.5 h-3.5" />
+                  </div>
                   <input
                     type="date"
                     value={personal.birthDate || ''}
                     onChange={(e) => updatePersonalDetails({ birthDate: e.target.value })}
-                    className="w-full pl-8 pr-2 py-1.5 text-xs bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
+                    className="w-full px-2.5 py-1.5 text-xs sm:text-sm bg-transparent text-zinc-100 placeholder:text-zinc-500 focus:outline-none font-sans"
                   />
                 </div>
               </div>
@@ -354,32 +392,39 @@ export const PersonalDetailsForm: React.FC = () => {
 
             {features.birthPlace && (
               <div>
-                <label className="block text-[11px] font-semibold text-slate-700 mb-1">
+                <label className="block text-[11px] font-mono font-medium text-zinc-300 mb-1.5">
                   Place of Birth
                 </label>
-                <input
-                  type="text"
-                  value={personal.birthPlace || ''}
-                  onChange={(e) => updatePersonalDetails({ birthPlace: e.target.value })}
-                  placeholder="e.g. Munich, Germany"
-                  className="w-full px-3 py-1.5 text-xs bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
-                />
+                <div className="group relative flex items-center bg-[#090C10] border border-white/[0.09] hover:border-white/[0.18] focus-within:border-lime-500/50 focus-within:shadow-[0_0_12px_rgba(163,230,53,0.18)] focus-within:ring-1 focus-within:ring-lime-500/30 rounded-xl transition-all shadow-[inset_0_2px_4px_rgba(0,0,0,0.7)] p-1">
+                  <div className="w-7 h-7 rounded-lg bg-white/[0.05] backdrop-blur-md border border-white/[0.12] shadow-[inset_0_1px_1px_rgba(255,255,255,0.2)] flex items-center justify-center text-zinc-400 group-focus-within:text-lime-400 group-focus-within:border-lime-500/40 transition-all shrink-0 ml-0.5">
+                    <MapPin className="w-3.5 h-3.5" />
+                  </div>
+                  <input
+                    type="text"
+                    value={personal.birthPlace || ''}
+                    onChange={(e) => updatePersonalDetails({ birthPlace: e.target.value })}
+                    placeholder="e.g. Munich, Germany"
+                    className="w-full px-2.5 py-1.5 text-xs sm:text-sm bg-transparent text-zinc-100 placeholder:text-zinc-500 focus:outline-none font-sans"
+                  />
+                </div>
               </div>
             )}
 
             {features.nationality && (
               <div>
-                <label className="block text-[11px] font-semibold text-slate-700 mb-1">
+                <label className="block text-[11px] font-mono font-medium text-zinc-300 mb-1.5">
                   Nationality
                 </label>
-                <div className="relative">
-                  <Flag className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-2.5" />
+                <div className="group relative flex items-center bg-[#090C10] border border-white/[0.09] hover:border-white/[0.18] focus-within:border-lime-500/50 focus-within:shadow-[0_0_12px_rgba(163,230,53,0.18)] focus-within:ring-1 focus-within:ring-lime-500/30 rounded-xl transition-all shadow-[inset_0_2px_4px_rgba(0,0,0,0.7)] p-1">
+                  <div className="w-7 h-7 rounded-lg bg-white/[0.05] backdrop-blur-md border border-white/[0.12] shadow-[inset_0_1px_1px_rgba(255,255,255,0.2)] flex items-center justify-center text-zinc-400 group-focus-within:text-lime-400 group-focus-within:border-lime-500/40 transition-all shrink-0 ml-0.5">
+                    <Flag className="w-3.5 h-3.5" />
+                  </div>
                   <input
                     type="text"
                     value={personal.nationality || ''}
                     onChange={(e) => updatePersonalDetails({ nationality: e.target.value })}
                     placeholder="e.g. Indian, American, German"
-                    className="w-full pl-8 pr-3 py-1.5 text-xs bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
+                    className="w-full px-2.5 py-1.5 text-xs sm:text-sm bg-transparent text-zinc-100 placeholder:text-zinc-500 focus:outline-none font-sans"
                   />
                 </div>
               </div>
@@ -387,17 +432,19 @@ export const PersonalDetailsForm: React.FC = () => {
 
             {features.visaStatus && (
               <div>
-                <label className="block text-[11px] font-semibold text-slate-700 mb-1">
+                <label className="block text-[11px] font-mono font-medium text-zinc-300 mb-1.5">
                   Visa / Residency Status
                 </label>
-                <div className="relative">
-                  <ShieldCheck className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-2.5" />
+                <div className="group relative flex items-center bg-[#090C10] border border-white/[0.09] hover:border-white/[0.18] focus-within:border-lime-500/50 focus-within:shadow-[0_0_12px_rgba(163,230,53,0.18)] focus-within:ring-1 focus-within:ring-lime-500/30 rounded-xl transition-all shadow-[inset_0_2px_4px_rgba(0,0,0,0.7)] p-1">
+                  <div className="w-7 h-7 rounded-lg bg-white/[0.05] backdrop-blur-md border border-white/[0.12] shadow-[inset_0_1px_1px_rgba(255,255,255,0.2)] flex items-center justify-center text-zinc-400 group-focus-within:text-lime-400 group-focus-within:border-lime-500/40 transition-all shrink-0 ml-0.5">
+                    <ShieldCheck className="w-3.5 h-3.5" />
+                  </div>
                   <input
                     type="text"
                     value={personal.visaStatus || ''}
                     onChange={(e) => updatePersonalDetails({ visaStatus: e.target.value })}
-                    placeholder="e.g. Employment Visa / Golden Visa"
-                    className="w-full pl-8 pr-3 py-1.5 text-xs bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
+                    placeholder="e.g. Employment Visa / Permanent Resident"
+                    className="w-full px-2.5 py-1.5 text-xs sm:text-sm bg-transparent text-zinc-100 placeholder:text-zinc-500 focus:outline-none font-sans"
                   />
                 </div>
               </div>
@@ -405,17 +452,19 @@ export const PersonalDetailsForm: React.FC = () => {
 
             {features.drivingLicense && (
               <div>
-                <label className="block text-[11px] font-semibold text-slate-700 mb-1">
+                <label className="block text-[11px] font-mono font-medium text-zinc-300 mb-1.5">
                   Driving License
                 </label>
-                <div className="relative">
-                  <Car className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-2.5" />
+                <div className="group relative flex items-center bg-[#090C10] border border-white/[0.09] hover:border-white/[0.18] focus-within:border-lime-500/50 focus-within:shadow-[0_0_12px_rgba(163,230,53,0.18)] focus-within:ring-1 focus-within:ring-lime-500/30 rounded-xl transition-all shadow-[inset_0_2px_4px_rgba(0,0,0,0.7)] p-1">
+                  <div className="w-7 h-7 rounded-lg bg-white/[0.05] backdrop-blur-md border border-white/[0.12] shadow-[inset_0_1px_1px_rgba(255,255,255,0.2)] flex items-center justify-center text-zinc-400 group-focus-within:text-lime-400 group-focus-within:border-lime-500/40 transition-all shrink-0 ml-0.5">
+                    <Car className="w-3.5 h-3.5" />
+                  </div>
                   <input
                     type="text"
                     value={personal.drivingLicense || ''}
                     onChange={(e) => updatePersonalDetails({ drivingLicense: e.target.value })}
                     placeholder="e.g. Valid Driver's License"
-                    className="w-full pl-8 pr-3 py-1.5 text-xs bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
+                    className="w-full px-2.5 py-1.5 text-xs sm:text-sm bg-transparent text-zinc-100 placeholder:text-zinc-500 focus:outline-none font-sans"
                   />
                 </div>
               </div>
@@ -425,12 +474,12 @@ export const PersonalDetailsForm: React.FC = () => {
       )}
 
       {/* Professional Summary */}
-      <div className="pt-3 border-t border-slate-100">
+      <div className="pt-3 border-t border-white/[0.08]">
         <div className="flex items-center justify-between mb-1.5">
-          <label className="block text-[11px] font-semibold text-slate-700">
+          <label className="block text-[11px] font-mono font-medium text-zinc-300">
             Professional Summary
           </label>
-          <span className="text-[10px] text-slate-400 font-mono">
+          <span className="text-[10px] text-zinc-500 font-mono">
             {summary.length} characters • ~{summary.split(/\s+/).filter(Boolean).length} words
           </span>
         </div>
@@ -439,7 +488,7 @@ export const PersonalDetailsForm: React.FC = () => {
           value={summary}
           onChange={(e) => updateSummary(e.target.value)}
           placeholder="Brief 2-4 sentence pitch highlighting your key skills, years of experience, and highest impact achievements..."
-          className="w-full p-2.5 text-xs bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 leading-relaxed font-sans"
+          className="w-full p-3 text-xs sm:text-sm bg-[#090C10] border border-white/[0.09] hover:border-white/[0.18] focus:border-lime-500/50 focus:shadow-[0_0_12px_rgba(163,230,53,0.18)] focus:ring-1 focus:ring-lime-500/30 rounded-xl text-zinc-100 placeholder:text-zinc-500 shadow-[inset_0_2px_4px_rgba(0,0,0,0.7)] transition-all focus:outline-none leading-relaxed font-sans"
         />
       </div>
     </div>

@@ -164,10 +164,10 @@ const SortableSectionCard: React.FC<SectionCardProps> = ({ meta, isOpen, onToggl
           </button>
           
           <div className="flex items-center gap-2.5 cursor-pointer flex-1 min-w-0" onClick={onToggleOpen}>
-            <div className={`w-7 h-7 rounded-xl flex items-center justify-center shrink-0 border ${
+            <div className={`w-8 h-8 rounded-xl bg-white/[0.05] backdrop-blur-md border shadow-[inset_0_1px_1px_rgba(255,255,255,0.2)] flex items-center justify-center shrink-0 transition-all ${
               isOpen 
-                ? 'bg-[#090B0E] border-lime-500/30 text-lime-400' 
-                : 'bg-[#090B0E] border-white/[0.08] text-zinc-400'
+                ? 'border-lime-500/40 text-lime-400 shadow-[0_0_12px_rgba(163,230,53,0.2)]' 
+                : 'border-white/[0.12] text-zinc-400'
             }`}>
               {getSectionIcon(meta.type)}
             </div>
@@ -189,11 +189,11 @@ const SortableSectionCard: React.FC<SectionCardProps> = ({ meta, isOpen, onToggl
           </div>
         </div>
 
-        <div className="flex items-center gap-1 shrink-0 ml-2">
+        <div className="flex items-center gap-1.5 shrink-0 ml-2">
           <button
             type="button"
             onClick={onToggleEnabled}
-            className={`p-1.5 rounded-lg text-xs transition-colors ${
+            className={`w-7 h-7 rounded-lg bg-white/[0.04] backdrop-blur-sm border border-white/[0.08] hover:bg-white/[0.08] flex items-center justify-center text-xs transition-colors ${
               meta.enabled ? 'text-zinc-400 hover:text-white' : 'text-zinc-500 hover:text-lime-400'
             }`}
             title={meta.enabled ? 'Hide section from resume' : 'Show section'}
@@ -203,8 +203,8 @@ const SortableSectionCard: React.FC<SectionCardProps> = ({ meta, isOpen, onToggl
           <button
             type="button"
             onClick={onToggleOpen}
-            className={`p-1.5 rounded-lg transition-colors ${
-              isOpen ? 'text-lime-400 bg-lime-950/40 border border-lime-500/30' : 'text-zinc-400 hover:text-white'
+            className={`w-7 h-7 rounded-lg bg-white/[0.04] backdrop-blur-sm border flex items-center justify-center transition-colors ${
+              isOpen ? 'text-lime-400 border-lime-500/40 bg-lime-950/30' : 'text-zinc-400 border-white/[0.08] hover:text-white hover:bg-white/[0.08]'
             }`}
           >
             {isOpen ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}

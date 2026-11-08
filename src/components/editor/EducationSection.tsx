@@ -22,10 +22,13 @@ import {
   Plus, 
   Trash2, 
   GraduationCap, 
+  Building2,
   ChevronDown, 
   ChevronUp, 
   Calendar,
-  MapPin
+  MapPin,
+  Award,
+  BookOpen
 } from 'lucide-react';
 
 interface SortableEducationItemProps {
@@ -56,29 +59,29 @@ const SortableEducationCard: React.FC<SortableEducationItemProps> = ({ item, onU
     <div
       ref={setNodeRef}
       style={style}
-      className="bg-white border border-slate-200 rounded-xl shadow-sm hover:border-slate-300 transition-all overflow-hidden"
+      className="bg-[#0B0E14] border border-white/[0.08] hover:border-white/[0.16] rounded-2xl shadow-[inset_0_1px_1px_rgba(255,255,255,0.04),0_6px_20px_rgba(0,0,0,0.4)] transition-all overflow-hidden"
     >
-      <div className="flex items-center justify-between p-3.5 bg-slate-50/70 border-b border-slate-100">
+      <div className="flex items-center justify-between p-3.5 bg-[#0E1218] border-b border-white/[0.08]">
         <div className="flex items-center gap-2.5 flex-1 min-w-0">
           <button
             type="button"
             {...attributes}
             {...listeners}
-            className="cursor-grab active:cursor-grabbing p-1 text-slate-400 hover:text-slate-600 rounded touch-none"
+            className="cursor-grab active:cursor-grabbing p-1 text-zinc-500 hover:text-zinc-300 rounded touch-none"
           >
             <GripVertical className="w-4 h-4" />
           </button>
           <div onClick={() => setIsOpen(!isOpen)} className="flex-1 min-w-0 cursor-pointer">
             <div className="flex items-center gap-2">
-              <span className="text-sm font-semibold text-slate-800 truncate">
+              <span className="text-xs sm:text-sm font-mono font-bold text-white truncate">
                 {item.degree || 'Degree / Major'}
               </span>
-              <span className="text-xs text-slate-400">•</span>
-              <span className="text-xs text-slate-600 truncate">
+              <span className="text-xs text-zinc-600 font-mono">•</span>
+              <span className="text-xs font-mono text-zinc-400 truncate">
                 {item.institution || 'University'}
               </span>
             </div>
-            <div className="text-[11px] text-slate-400 flex items-center gap-2 mt-0.5">
+            <div className="text-[11px] font-mono text-zinc-500 flex items-center gap-2 mt-0.5">
               <span>{item.startDate || 'Date'} — {item.current ? 'Present' : (item.endDate || 'Date')}</span>
               {item.grade && <span>• {item.grade}</span>}
             </div>
@@ -89,14 +92,14 @@ const SortableEducationCard: React.FC<SortableEducationItemProps> = ({ item, onU
           <button
             type="button"
             onClick={onRemove}
-            className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors"
+            className="p-1.5 text-zinc-400 hover:text-rose-400 hover:bg-rose-950/30 rounded-lg transition-colors"
           >
             <Trash2 className="w-4 h-4" />
           </button>
           <button
             type="button"
             onClick={() => setIsOpen(!isOpen)}
-            className="p-1.5 text-slate-400 hover:text-slate-600 rounded-lg transition-colors"
+            className="p-1.5 text-zinc-400 hover:text-white rounded-lg transition-colors"
           >
             {isOpen ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
           </button>
@@ -104,112 +107,141 @@ const SortableEducationCard: React.FC<SortableEducationItemProps> = ({ item, onU
       </div>
 
       {isOpen && (
-        <div className="p-4 space-y-3.5">
+        <div className="p-4 space-y-3.5 bg-[#0E1218]/40">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+            {/* Degree */}
             <div>
-              <label className="block text-xs font-medium text-slate-700 mb-1">
+              <label className="block text-[11px] font-mono font-medium text-zinc-300 mb-1.5">
                 Degree & Specialization
               </label>
-              <div className="relative">
-                <GraduationCap className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-2.5" />
+              <div className="group relative flex items-center bg-[#090C10] border border-white/[0.09] hover:border-white/[0.18] focus-within:border-lime-500/50 focus-within:shadow-[0_0_12px_rgba(163,230,53,0.18)] focus-within:ring-1 focus-within:ring-lime-500/30 rounded-xl transition-all shadow-[inset_0_2px_4px_rgba(0,0,0,0.7)] p-1">
+                <div className="w-7 h-7 rounded-lg bg-white/[0.05] backdrop-blur-md border border-white/[0.12] shadow-[inset_0_1px_1px_rgba(255,255,255,0.2)] flex items-center justify-center text-zinc-400 group-focus-within:text-lime-400 group-focus-within:border-lime-500/40 transition-all shrink-0 ml-0.5">
+                  <GraduationCap className="w-3.5 h-3.5" />
+                </div>
                 <input
                   type="text"
                   value={item.degree}
                   onChange={(e) => onUpdate({ degree: e.target.value })}
                   placeholder="e.g. B.S. in Computer Science"
-                  className="w-full pl-8 pr-3 py-1.5 text-sm bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
+                  className="w-full px-2.5 py-1.5 text-xs sm:text-sm bg-transparent text-zinc-100 placeholder:text-zinc-500 focus:outline-none font-sans"
                 />
               </div>
             </div>
 
+            {/* School */}
             <div>
-              <label className="block text-xs font-medium text-slate-700 mb-1">
+              <label className="block text-[11px] font-mono font-medium text-zinc-300 mb-1.5">
                 School / Institution
               </label>
-              <input
-                type="text"
-                value={item.institution}
-                onChange={(e) => onUpdate({ institution: e.target.value })}
-                placeholder="e.g. Stanford University"
-                className="w-full px-3 py-1.5 text-sm bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
-              />
+              <div className="group relative flex items-center bg-[#090C10] border border-white/[0.09] hover:border-white/[0.18] focus-within:border-lime-500/50 focus-within:shadow-[0_0_12px_rgba(163,230,53,0.18)] focus-within:ring-1 focus-within:ring-lime-500/30 rounded-xl transition-all shadow-[inset_0_2px_4px_rgba(0,0,0,0.7)] p-1">
+                <div className="w-7 h-7 rounded-lg bg-white/[0.05] backdrop-blur-md border border-white/[0.12] shadow-[inset_0_1px_1px_rgba(255,255,255,0.2)] flex items-center justify-center text-zinc-400 group-focus-within:text-lime-400 group-focus-within:border-lime-500/40 transition-all shrink-0 ml-0.5">
+                  <Building2 className="w-3.5 h-3.5" />
+                </div>
+                <input
+                  type="text"
+                  value={item.institution}
+                  onChange={(e) => onUpdate({ institution: e.target.value })}
+                  placeholder="e.g. Stanford University"
+                  className="w-full px-2.5 py-1.5 text-xs sm:text-sm bg-transparent text-zinc-100 placeholder:text-zinc-500 focus:outline-none font-sans"
+                />
+              </div>
             </div>
 
+            {/* Location */}
             <div>
-              <label className="block text-xs font-medium text-slate-700 mb-1">
+              <label className="block text-[11px] font-mono font-medium text-zinc-300 mb-1.5">
                 Location
               </label>
-              <div className="relative">
-                <MapPin className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-2.5" />
+              <div className="group relative flex items-center bg-[#090C10] border border-white/[0.09] hover:border-white/[0.18] focus-within:border-lime-500/50 focus-within:shadow-[0_0_12px_rgba(163,230,53,0.18)] focus-within:ring-1 focus-within:ring-lime-500/30 rounded-xl transition-all shadow-[inset_0_2px_4px_rgba(0,0,0,0.7)] p-1">
+                <div className="w-7 h-7 rounded-lg bg-white/[0.05] backdrop-blur-md border border-white/[0.12] shadow-[inset_0_1px_1px_rgba(255,255,255,0.2)] flex items-center justify-center text-zinc-400 group-focus-within:text-lime-400 group-focus-within:border-lime-500/40 transition-all shrink-0 ml-0.5">
+                  <MapPin className="w-3.5 h-3.5" />
+                </div>
                 <input
                   type="text"
                   value={item.location || ''}
                   onChange={(e) => onUpdate({ location: e.target.value })}
-                  placeholder="e.g. Stanford, CA (or Remote)"
-                  className="w-full pl-8 pr-3 py-1.5 text-sm bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
+                  placeholder="e.g. Stanford, CA"
+                  className="w-full px-2.5 py-1.5 text-xs sm:text-sm bg-transparent text-zinc-100 placeholder:text-zinc-500 focus:outline-none font-sans"
                 />
               </div>
             </div>
 
+            {/* Dates */}
             <div className="grid grid-cols-2 gap-2">
               <div>
-                <label className="block text-xs font-medium text-slate-700 mb-1">
+                <label className="block text-[11px] font-mono font-medium text-zinc-300 mb-1.5">
                   Start Date
                 </label>
-                <div className="relative">
-                  <Calendar className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-2.5" />
+                <div className="group relative flex items-center bg-[#090C10] border border-white/[0.09] hover:border-white/[0.18] focus-within:border-lime-500/50 focus-within:shadow-[0_0_12px_rgba(163,230,53,0.18)] focus-within:ring-1 focus-within:ring-lime-500/30 rounded-xl transition-all shadow-[inset_0_2px_4px_rgba(0,0,0,0.7)] p-1">
+                  <div className="w-7 h-7 rounded-lg bg-white/[0.05] backdrop-blur-md border border-white/[0.12] shadow-[inset_0_1px_1px_rgba(255,255,255,0.2)] flex items-center justify-center text-zinc-400 group-focus-within:text-lime-400 group-focus-within:border-lime-500/40 transition-all shrink-0 ml-0.5">
+                    <Calendar className="w-3.5 h-3.5" />
+                  </div>
                   <input
                     type="text"
                     value={item.startDate || ''}
                     onChange={(e) => onUpdate({ startDate: e.target.value })}
-                    placeholder="e.g. 2018-09 or 2018"
-                    className="w-full pl-8 pr-2 py-1.5 text-xs bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
+                    placeholder="e.g. 2018"
+                    className="w-full px-2 py-1.5 text-xs sm:text-sm bg-transparent text-zinc-100 placeholder:text-zinc-500 focus:outline-none font-sans"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-slate-700 mb-1">
+                <label className="block text-[11px] font-mono font-medium text-zinc-300 mb-1.5">
                   End Date / Expected
                 </label>
-                <div className="relative">
-                  <Calendar className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-2.5" />
+                <div className="group relative flex items-center bg-[#090C10] border border-white/[0.09] hover:border-white/[0.18] focus-within:border-lime-500/50 focus-within:shadow-[0_0_12px_rgba(163,230,53,0.18)] focus-within:ring-1 focus-within:ring-lime-500/30 rounded-xl transition-all shadow-[inset_0_2px_4px_rgba(0,0,0,0.7)] p-1">
+                  <div className="w-7 h-7 rounded-lg bg-white/[0.05] backdrop-blur-md border border-white/[0.12] shadow-[inset_0_1px_1px_rgba(255,255,255,0.2)] flex items-center justify-center text-zinc-400 group-focus-within:text-lime-400 group-focus-within:border-lime-500/40 transition-all shrink-0 ml-0.5">
+                    <Calendar className="w-3.5 h-3.5" />
+                  </div>
                   <input
                     type="text"
                     value={item.endDate || ''}
                     onChange={(e) => onUpdate({ endDate: e.target.value })}
-                    placeholder="e.g. 2022-05 or 2022"
-                    className="w-full pl-8 pr-2 py-1.5 text-xs bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
+                    placeholder="e.g. 2022"
+                    className="w-full px-2 py-1.5 text-xs sm:text-sm bg-transparent text-zinc-100 placeholder:text-zinc-500 focus:outline-none font-sans"
                   />
                 </div>
               </div>
             </div>
 
+            {/* GPA */}
             <div>
-              <label className="block text-xs font-medium text-slate-700 mb-1">
+              <label className="block text-[11px] font-mono font-medium text-zinc-300 mb-1.5">
                 GPA, Honors or Distinctions
               </label>
-              <input
-                type="text"
-                value={item.grade || ''}
-                onChange={(e) => onUpdate({ grade: e.target.value })}
-                placeholder="e.g. 3.9 GPA, Magna Cum Laude"
-                className="w-full px-3 py-1.5 text-sm bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
-              />
+              <div className="group relative flex items-center bg-[#090C10] border border-white/[0.09] hover:border-white/[0.18] focus-within:border-lime-500/50 focus-within:shadow-[0_0_12px_rgba(163,230,53,0.18)] focus-within:ring-1 focus-within:ring-lime-500/30 rounded-xl transition-all shadow-[inset_0_2px_4px_rgba(0,0,0,0.7)] p-1">
+                <div className="w-7 h-7 rounded-lg bg-white/[0.05] backdrop-blur-md border border-white/[0.12] shadow-[inset_0_1px_1px_rgba(255,255,255,0.2)] flex items-center justify-center text-zinc-400 group-focus-within:text-lime-400 group-focus-within:border-lime-500/40 transition-all shrink-0 ml-0.5">
+                  <Award className="w-3.5 h-3.5" />
+                </div>
+                <input
+                  type="text"
+                  value={item.grade || ''}
+                  onChange={(e) => onUpdate({ grade: e.target.value })}
+                  placeholder="e.g. 3.9 GPA, Magna Cum Laude"
+                  className="w-full px-2.5 py-1.5 text-xs sm:text-sm bg-transparent text-zinc-100 placeholder:text-zinc-500 focus:outline-none font-sans"
+                />
+              </div>
             </div>
-          </div>
 
-          <div>
-            <label className="block text-xs font-medium text-slate-700 mb-1">
-              Coursework or Activities (Optional)
-            </label>
-            <input
-              type="text"
-              value={item.description || ''}
-              onChange={(e) => onUpdate({ description: e.target.value })}
-              placeholder="e.g. Algorithms, Distributed Systems, Capstone Lead"
-              className="w-full px-3 py-1.5 text-xs bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
-            />
+            {/* Coursework */}
+            <div>
+              <label className="block text-[11px] font-mono font-medium text-zinc-300 mb-1.5">
+                Coursework or Activities (Optional)
+              </label>
+              <div className="group relative flex items-center bg-[#090C10] border border-white/[0.09] hover:border-white/[0.18] focus-within:border-lime-500/50 focus-within:shadow-[0_0_12px_rgba(163,230,53,0.18)] focus-within:ring-1 focus-within:ring-lime-500/30 rounded-xl transition-all shadow-[inset_0_2px_4px_rgba(0,0,0,0.7)] p-1">
+                <div className="w-7 h-7 rounded-lg bg-white/[0.05] backdrop-blur-md border border-white/[0.12] shadow-[inset_0_1px_1px_rgba(255,255,255,0.2)] flex items-center justify-center text-zinc-400 group-focus-within:text-lime-400 group-focus-within:border-lime-500/40 transition-all shrink-0 ml-0.5">
+                  <BookOpen className="w-3.5 h-3.5" />
+                </div>
+                <input
+                  type="text"
+                  value={item.description || ''}
+                  onChange={(e) => onUpdate({ description: e.target.value })}
+                  placeholder="e.g. Distributed Systems, ML Algorithms"
+                  className="w-full px-2.5 py-1.5 text-xs sm:text-sm bg-transparent text-zinc-100 placeholder:text-zinc-500 focus:outline-none font-sans"
+                />
+              </div>
+            </div>
           </div>
         </div>
       )}
@@ -241,16 +273,16 @@ export const EducationSection: React.FC = () => {
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div>
-          <h3 className="text-sm font-semibold text-slate-800">Education</h3>
-          <p className="text-xs text-slate-500">Add college degrees, diplomas, or relevant academic training</p>
+          <h3 className="text-sm font-mono font-bold text-white">Education</h3>
+          <p className="text-xs font-mono text-zinc-400">College degrees, diplomas, or accredited training</p>
         </div>
         <button
           type="button"
           onClick={addEducationItem}
-          className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-medium shadow-sm transition-colors"
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#12161E] hover:bg-[#181D26] border border-white/[0.1] hover:border-lime-500/40 text-lime-400 rounded-xl text-xs font-mono font-bold shadow-[inset_0_1px_1px_rgba(255,255,255,0.06)] transition-all active:scale-95 cursor-pointer"
         >
-          <Plus className="w-3.5 h-3.5" />
-          Add Education
+          <Plus className="w-3.5 h-3.5 text-lime-400" />
+          <span>Add Education</span>
         </button>
       </div>
 
@@ -265,6 +297,18 @@ export const EducationSection: React.FC = () => {
                 onRemove={() => removeEducationItem(item.id)}
               />
             ))}
+            {items.length === 0 && (
+              <div className="p-8 text-center border-2 border-dashed border-white/[0.1] rounded-2xl bg-[#090C10] shadow-[inset_0_2px_6px_rgba(0,0,0,0.7)]">
+                <p className="text-xs font-mono text-zinc-400">No education entries added yet.</p>
+                <button
+                  type="button"
+                  onClick={addEducationItem}
+                  className="mt-2 text-xs font-mono font-bold text-lime-400 hover:underline"
+                >
+                  + Add your first degree
+                </button>
+              </div>
+            )}
           </div>
         </SortableContext>
       </DndContext>

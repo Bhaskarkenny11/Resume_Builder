@@ -25,6 +25,7 @@ import {
   ChevronDown, 
   ChevronUp, 
   Building2, 
+  Briefcase,
   MapPin, 
   Calendar 
 } from 'lucide-react';
@@ -56,7 +57,6 @@ const SortableExperienceCard: React.FC<SortableExperienceItemProps> = ({ item, o
   };
 
   const handleInsertVerb = (verb: string) => {
-    // If description has bullet points, append or prepend verb
     const lines = item.description ? item.description.split('\n') : [];
     if (lines.length === 0 || !lines[lines.length - 1].trim()) {
       lines.push(`• ${verb} `);
@@ -71,16 +71,16 @@ const SortableExperienceCard: React.FC<SortableExperienceItemProps> = ({ item, o
     <div
       ref={setNodeRef}
       style={style}
-      className="bg-white border border-slate-200 rounded-xl shadow-sm hover:border-slate-300 transition-all overflow-hidden"
+      className="bg-[#0B0E14] border border-white/[0.08] hover:border-white/[0.16] rounded-2xl shadow-[inset_0_1px_1px_rgba(255,255,255,0.04),0_6px_20px_rgba(0,0,0,0.4)] transition-all overflow-hidden"
     >
       {/* Header Bar */}
-      <div className="flex items-center justify-between p-3.5 bg-slate-50/70 border-b border-slate-100">
+      <div className="flex items-center justify-between p-3.5 bg-[#0E1218] border-b border-white/[0.08]">
         <div className="flex items-center gap-2.5 flex-1 min-w-0">
           <button
             type="button"
             {...attributes}
             {...listeners}
-            className="cursor-grab active:cursor-grabbing p-1 text-slate-400 hover:text-slate-600 rounded touch-none"
+            className="cursor-grab active:cursor-grabbing p-1 text-zinc-500 hover:text-zinc-300 rounded touch-none"
             aria-label="Drag to reorder"
           >
             <GripVertical className="w-4 h-4" />
@@ -90,15 +90,15 @@ const SortableExperienceCard: React.FC<SortableExperienceItemProps> = ({ item, o
             className="flex-1 min-w-0 cursor-pointer"
           >
             <div className="flex items-center gap-2">
-              <span className="text-sm font-semibold text-slate-800 truncate">
+              <span className="text-xs sm:text-sm font-mono font-bold text-white truncate">
                 {item.role || 'New Role'}
               </span>
-              <span className="text-xs text-slate-400">•</span>
-              <span className="text-xs text-slate-600 truncate">
+              <span className="text-xs text-zinc-600 font-mono">•</span>
+              <span className="text-xs font-mono text-zinc-400 truncate">
                 {item.company || 'Company'}
               </span>
             </div>
-            <div className="text-[11px] text-slate-400 flex items-center gap-2 mt-0.5">
+            <div className="text-[11px] font-mono text-zinc-500 flex items-center gap-2 mt-0.5">
               <span>{item.startDate || 'Date'} — {item.current ? 'Present' : (item.endDate || 'Date')}</span>
               {item.location && <span>• {item.location}</span>}
             </div>
@@ -109,7 +109,7 @@ const SortableExperienceCard: React.FC<SortableExperienceItemProps> = ({ item, o
           <button
             type="button"
             onClick={onRemove}
-            className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors"
+            className="p-1.5 text-zinc-400 hover:text-rose-400 hover:bg-rose-950/30 rounded-lg transition-colors"
             title="Delete position"
           >
             <Trash2 className="w-4 h-4" />
@@ -117,7 +117,7 @@ const SortableExperienceCard: React.FC<SortableExperienceItemProps> = ({ item, o
           <button
             type="button"
             onClick={() => setIsOpen(!isOpen)}
-            className="p-1.5 text-slate-400 hover:text-slate-600 rounded-lg transition-colors"
+            className="p-1.5 text-zinc-400 hover:text-white rounded-lg transition-colors"
           >
             {isOpen ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
           </button>
@@ -126,87 +126,104 @@ const SortableExperienceCard: React.FC<SortableExperienceItemProps> = ({ item, o
 
       {/* Expanded Form Content */}
       {isOpen && (
-        <div className="p-4 space-y-4">
+        <div className="p-4 space-y-4 bg-[#0E1218]/40">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+            {/* Job Title */}
             <div>
-              <label className="block text-xs font-medium text-slate-700 mb-1">
+              <label className="block text-[11px] font-mono font-medium text-zinc-300 mb-1.5">
                 Job Title / Role
               </label>
-              <input
-                type="text"
-                value={item.role}
-                onChange={(e) => onUpdate({ role: e.target.value })}
-                placeholder="e.g. Lead Software Engineer"
-                className="w-full px-3 py-1.5 text-sm bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
-              />
+              <div className="group relative flex items-center bg-[#090C10] border border-white/[0.09] hover:border-white/[0.18] focus-within:border-lime-500/50 focus-within:shadow-[0_0_12px_rgba(163,230,53,0.18)] focus-within:ring-1 focus-within:ring-lime-500/30 rounded-xl transition-all shadow-[inset_0_2px_4px_rgba(0,0,0,0.7)] p-1">
+                <div className="w-7 h-7 rounded-lg bg-white/[0.05] backdrop-blur-md border border-white/[0.12] shadow-[inset_0_1px_1px_rgba(255,255,255,0.2)] flex items-center justify-center text-zinc-400 group-focus-within:text-lime-400 group-focus-within:border-lime-500/40 transition-all shrink-0 ml-0.5">
+                  <Briefcase className="w-3.5 h-3.5" />
+                </div>
+                <input
+                  type="text"
+                  value={item.role}
+                  onChange={(e) => onUpdate({ role: e.target.value })}
+                  placeholder="e.g. Lead Software Engineer"
+                  className="w-full px-2.5 py-1.5 text-xs sm:text-sm bg-transparent text-zinc-100 placeholder:text-zinc-500 focus:outline-none font-sans"
+                />
+              </div>
             </div>
 
+            {/* Company */}
             <div>
-              <label className="block text-xs font-medium text-slate-700 mb-1">
+              <label className="block text-[11px] font-mono font-medium text-zinc-300 mb-1.5">
                 Company / Organization
               </label>
-              <div className="relative">
-                <Building2 className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-2.5" />
+              <div className="group relative flex items-center bg-[#090C10] border border-white/[0.09] hover:border-white/[0.18] focus-within:border-lime-500/50 focus-within:shadow-[0_0_12px_rgba(163,230,53,0.18)] focus-within:ring-1 focus-within:ring-lime-500/30 rounded-xl transition-all shadow-[inset_0_2px_4px_rgba(0,0,0,0.7)] p-1">
+                <div className="w-7 h-7 rounded-lg bg-white/[0.05] backdrop-blur-md border border-white/[0.12] shadow-[inset_0_1px_1px_rgba(255,255,255,0.2)] flex items-center justify-center text-zinc-400 group-focus-within:text-lime-400 group-focus-within:border-lime-500/40 transition-all shrink-0 ml-0.5">
+                  <Building2 className="w-3.5 h-3.5" />
+                </div>
                 <input
                   type="text"
                   value={item.company}
                   onChange={(e) => onUpdate({ company: e.target.value })}
                   placeholder="e.g. Acme Corp"
-                  className="w-full pl-8 pr-3 py-1.5 text-sm bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
+                  className="w-full px-2.5 py-1.5 text-xs sm:text-sm bg-transparent text-zinc-100 placeholder:text-zinc-500 focus:outline-none font-sans"
                 />
               </div>
             </div>
 
+            {/* Location */}
             <div>
-              <label className="block text-xs font-medium text-slate-700 mb-1">
+              <label className="block text-[11px] font-mono font-medium text-zinc-300 mb-1.5">
                 Location
               </label>
-              <div className="relative">
-                <MapPin className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-2.5" />
+              <div className="group relative flex items-center bg-[#090C10] border border-white/[0.09] hover:border-white/[0.18] focus-within:border-lime-500/50 focus-within:shadow-[0_0_12px_rgba(163,230,53,0.18)] focus-within:ring-1 focus-within:ring-lime-500/30 rounded-xl transition-all shadow-[inset_0_2px_4px_rgba(0,0,0,0.7)] p-1">
+                <div className="w-7 h-7 rounded-lg bg-white/[0.05] backdrop-blur-md border border-white/[0.12] shadow-[inset_0_1px_1px_rgba(255,255,255,0.2)] flex items-center justify-center text-zinc-400 group-focus-within:text-lime-400 group-focus-within:border-lime-500/40 transition-all shrink-0 ml-0.5">
+                  <MapPin className="w-3.5 h-3.5" />
+                </div>
                 <input
                   type="text"
                   value={item.location || ''}
                   onChange={(e) => onUpdate({ location: e.target.value })}
                   placeholder="e.g. New York, NY (or Remote)"
-                  className="w-full pl-8 pr-3 py-1.5 text-sm bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
+                  className="w-full px-2.5 py-1.5 text-xs sm:text-sm bg-transparent text-zinc-100 placeholder:text-zinc-500 focus:outline-none font-sans"
                 />
               </div>
             </div>
 
+            {/* Dates */}
             <div className="grid grid-cols-2 gap-2">
               <div>
-                <label className="block text-xs font-medium text-slate-700 mb-1">
+                <label className="block text-[11px] font-mono font-medium text-zinc-300 mb-1.5">
                   Start Date
                 </label>
-                <div className="relative">
-                  <Calendar className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-2.5" />
+                <div className="group relative flex items-center bg-[#090C10] border border-white/[0.09] hover:border-white/[0.18] focus-within:border-lime-500/50 focus-within:shadow-[0_0_12px_rgba(163,230,53,0.18)] focus-within:ring-1 focus-within:ring-lime-500/30 rounded-xl transition-all shadow-[inset_0_2px_4px_rgba(0,0,0,0.7)] p-1">
+                  <div className="w-7 h-7 rounded-lg bg-white/[0.05] backdrop-blur-md border border-white/[0.12] shadow-[inset_0_1px_1px_rgba(255,255,255,0.2)] flex items-center justify-center text-zinc-400 group-focus-within:text-lime-400 group-focus-within:border-lime-500/40 transition-all shrink-0 ml-0.5">
+                    <Calendar className="w-3.5 h-3.5" />
+                  </div>
                   <input
                     type="text"
                     value={item.startDate || ''}
                     onChange={(e) => onUpdate({ startDate: e.target.value })}
-                    placeholder="e.g. 2021-01 or Jan 2021"
-                    className="w-full pl-8 pr-2 py-1.5 text-xs bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
+                    placeholder="e.g. Jan 2021"
+                    className="w-full px-2 py-1.5 text-xs sm:text-sm bg-transparent text-zinc-100 placeholder:text-zinc-500 focus:outline-none font-sans"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-slate-700 mb-1">
+                <label className="block text-[11px] font-mono font-medium text-zinc-300 mb-1.5">
                   End Date
                 </label>
                 {item.current ? (
-                  <div className="h-8 flex items-center px-3 bg-indigo-50/70 border border-indigo-200/50 rounded-lg text-xs font-medium text-indigo-700">
+                  <div className="h-9 flex items-center justify-center px-3 bg-emerald-950/40 border border-emerald-800/50 rounded-xl text-xs font-mono font-bold text-emerald-400 shadow-[0_0_12px_rgba(16,185,129,0.15)]">
                     Present
                   </div>
                 ) : (
-                  <div className="relative">
-                    <Calendar className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-2.5" />
+                  <div className="group relative flex items-center bg-[#090C10] border border-white/[0.09] hover:border-white/[0.18] focus-within:border-lime-500/50 focus-within:shadow-[0_0_12px_rgba(163,230,53,0.18)] focus-within:ring-1 focus-within:ring-lime-500/30 rounded-xl transition-all shadow-[inset_0_2px_4px_rgba(0,0,0,0.7)] p-1">
+                    <div className="w-7 h-7 rounded-lg bg-white/[0.05] backdrop-blur-md border border-white/[0.12] shadow-[inset_0_1px_1px_rgba(255,255,255,0.2)] flex items-center justify-center text-zinc-400 group-focus-within:text-lime-400 group-focus-within:border-lime-500/40 transition-all shrink-0 ml-0.5">
+                      <Calendar className="w-3.5 h-3.5" />
+                    </div>
                     <input
                       type="text"
                       value={item.endDate || ''}
                       onChange={(e) => onUpdate({ endDate: e.target.value })}
-                      placeholder="e.g. 2023-05 or Present"
-                      className="w-full pl-8 pr-2 py-1.5 text-xs bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
+                      placeholder="e.g. May 2023"
+                      className="w-full px-2 py-1.5 text-xs sm:text-sm bg-transparent text-zinc-100 placeholder:text-zinc-500 focus:outline-none font-sans"
                     />
                   </div>
                 )}
@@ -214,23 +231,24 @@ const SortableExperienceCard: React.FC<SortableExperienceItemProps> = ({ item, o
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
+          {/* Current Job Checkbox */}
+          <div className="flex items-center gap-2 pt-1">
             <input
               type="checkbox"
               id={`curr-${item.id}`}
               checked={item.current}
               onChange={(e) => onUpdate({ current: e.target.checked, endDate: e.target.checked ? '' : item.endDate })}
-              className="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
+              className="w-4 h-4 rounded bg-[#090C10] border-white/[0.15] text-lime-400 focus:ring-lime-500/40 accent-lime-400 cursor-pointer"
             />
-            <label htmlFor={`curr-${item.id}`} className="text-xs text-slate-600 select-none cursor-pointer">
+            <label htmlFor={`curr-${item.id}`} className="text-xs font-mono text-zinc-400 select-none cursor-pointer hover:text-zinc-200">
               I currently work here
             </label>
           </div>
 
           {/* Bullet Points with Action Verb Auto-Formatter */}
-          <div className="pt-2 border-t border-slate-100">
+          <div className="pt-2 border-t border-white/[0.08]">
             <div className="flex items-center justify-between mb-1.5">
-              <label className="block text-xs font-semibold text-slate-700">
+              <label className="block text-[11px] font-mono font-medium text-zinc-300">
                 Key Accomplishments & Responsibilities
               </label>
               
@@ -238,10 +256,10 @@ const SortableExperienceCard: React.FC<SortableExperienceItemProps> = ({ item, o
                 <button
                   type="button"
                   onClick={() => setShowVerbPicker(!showVerbPicker)}
-                  className="px-2.5 py-1 text-xs font-medium text-indigo-600 hover:text-indigo-700 bg-indigo-50 hover:bg-indigo-100 rounded-md flex items-center gap-1.5 transition-colors"
+                  className="px-2.5 py-1 text-xs font-mono font-medium text-lime-400 bg-white/[0.05] hover:bg-white/[0.1] border border-lime-500/30 rounded-lg flex items-center gap-1.5 transition-colors shadow-[0_0_10px_rgba(163,230,53,0.15)]"
                 >
-                  <Sparkles className="w-3.5 h-3.5 text-indigo-600" />
-                  Action Verbs
+                  <Sparkles className="w-3.5 h-3.5 text-lime-400" />
+                  <span>Action Verbs</span>
                 </button>
 
                 {showVerbPicker && (
@@ -260,9 +278,9 @@ const SortableExperienceCard: React.FC<SortableExperienceItemProps> = ({ item, o
               value={item.description}
               onChange={(e) => onUpdate({ description: e.target.value })}
               placeholder="• Spearheaded the migration of core services, reducing latency by 45%&#10;• Orchestrated a cross-functional team of 8 engineers delivering features on schedule"
-              className="w-full p-3 text-xs bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 leading-relaxed font-sans"
+              className="w-full p-3 text-xs sm:text-sm bg-[#090C10] border border-white/[0.09] hover:border-white/[0.18] focus:border-lime-500/50 focus:shadow-[0_0_12px_rgba(163,230,53,0.18)] focus:ring-1 focus:ring-lime-500/30 rounded-xl text-zinc-100 placeholder:text-zinc-500 shadow-[inset_0_2px_4px_rgba(0,0,0,0.7)] transition-all focus:outline-none leading-relaxed font-sans"
             />
-            <p className="text-[11px] text-slate-400 mt-1">
+            <p className="text-[11px] font-mono text-zinc-500 mt-1">
               Tip: Start each line with a bullet point (•) and a high-impact metric.
             </p>
           </div>
@@ -296,16 +314,16 @@ export const ExperienceSection: React.FC = () => {
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div>
-          <h3 className="text-sm font-semibold text-slate-800">Employment History</h3>
-          <p className="text-xs text-slate-500">Highlight quantifiable achievements in reverse chronological order</p>
+          <h3 className="text-sm font-mono font-bold text-white">Employment History</h3>
+          <p className="text-xs font-mono text-zinc-400">Quantifiable achievements in reverse chronological order</p>
         </div>
         <button
           type="button"
           onClick={addExperienceItem}
-          className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-medium shadow-sm transition-colors"
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#12161E] hover:bg-[#181D26] border border-white/[0.1] hover:border-lime-500/40 text-lime-400 rounded-xl text-xs font-mono font-bold shadow-[inset_0_1px_1px_rgba(255,255,255,0.06)] transition-all active:scale-95 cursor-pointer"
         >
-          <Plus className="w-3.5 h-3.5" />
-          Add Position
+          <Plus className="w-3.5 h-3.5 text-lime-400" />
+          <span>Add Position</span>
         </button>
       </div>
 
@@ -321,14 +339,14 @@ export const ExperienceSection: React.FC = () => {
               />
             ))}
             {items.length === 0 && (
-              <div className="p-8 text-center border-2 border-dashed border-slate-200 rounded-xl bg-slate-50">
-                <p className="text-xs text-slate-500">No work experience entries added yet.</p>
+              <div className="p-8 text-center border-2 border-dashed border-white/[0.1] rounded-2xl bg-[#090C10] shadow-[inset_0_2px_6px_rgba(0,0,0,0.7)]">
+                <p className="text-xs font-mono text-zinc-400">No work experience entries added yet.</p>
                 <button
                   type="button"
                   onClick={addExperienceItem}
-                  className="mt-2 text-xs font-medium text-indigo-600 hover:underline"
+                  className="mt-2 text-xs font-mono font-bold text-lime-400 hover:underline"
                 >
-                  Add your first position
+                  + Add your first position
                 </button>
               </div>
             )}
