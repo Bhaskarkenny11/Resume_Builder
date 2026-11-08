@@ -251,10 +251,10 @@ export const AdminDashboard: React.FC = () => {
   const areaPoints = `0,${chartHeight} ${polylinePoints} ${chartWidth},${chartHeight}`;
 
   return (
-    <div className="min-h-screen bg-[#09090b] text-zinc-100 flex flex-col font-sans selection:bg-indigo-600 selection:text-white">
+    <div className="min-h-screen bg-[#0A0D12] text-zinc-100 flex flex-col font-sans selection:bg-lime-400 selection:text-black">
       {/* 1. TOP ADMIN NAVBAR */}
-      <header className="sticky top-0 z-40 bg-[#09090b]/90 backdrop-blur-xl border-b border-zinc-800/80 px-4 sm:px-8 py-3.5">
-        <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
+      <header className="sticky top-0 z-40 bg-[#0E1218]/90 backdrop-blur-xl border-b border-white/[0.08] px-4 sm:px-8 xl:px-12 py-3.5 shadow-[0_4px_25px_rgba(0,0,0,0.7)]">
+        <div className="w-full max-w-[1920px] mx-auto flex items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <button
               onClick={() => setActiveTab('dashboard')}
@@ -320,7 +320,7 @@ export const AdminDashboard: React.FC = () => {
       </header>
 
       {/* 2. ADMIN MAIN CONTAINER */}
-      <div className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-8 py-6 flex flex-col md:flex-row gap-8">
+      <div className="flex-1 w-full max-w-[1920px] mx-auto px-4 sm:px-8 xl:px-12 py-6 flex flex-col md:flex-row gap-8">
         {/* Navigation Sidebar */}
         <aside className="w-full md:w-56 shrink-0 space-y-1">
           <div className="text-[11px] font-mono uppercase tracking-wider text-zinc-500 px-3 py-1 font-semibold">

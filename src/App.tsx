@@ -15,7 +15,7 @@ export const App: React.FC = () => {
   }, [initialize]);
 
   return (
-    <div className="min-h-screen bg-slate-50 font-sans selection:bg-indigo-500 selection:text-white">
+    <div className="min-h-screen bg-[#0A0D12] text-zinc-100 font-sans selection:bg-lime-400 selection:text-black">
       {/* Route views based on activeTab */}
       {activeTab === 'dashboard' ? (
         <DashboardView />

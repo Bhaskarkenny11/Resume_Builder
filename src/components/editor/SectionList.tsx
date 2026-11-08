@@ -53,15 +53,15 @@ interface SectionCardProps {
 
 const getSectionIcon = (type: string) => {
   switch (type) {
-    case 'personal': return <User className="w-4 h-4 text-blue-600" />;
-    case 'summary': return <FileText className="w-4 h-4 text-blue-600" />;
-    case 'experience': return <Briefcase className="w-4 h-4 text-blue-600" />;
-    case 'education': return <GraduationCap className="w-4 h-4 text-blue-600" />;
-    case 'skills': return <Wrench className="w-4 h-4 text-blue-600" />;
-    case 'projects': return <FolderGit2 className="w-4 h-4 text-blue-600" />;
-    case 'certifications': return <Award className="w-4 h-4 text-blue-600" />;
-    case 'languages': return <LangIcon className="w-4 h-4 text-blue-600" />;
-    default: return <Layers className="w-4 h-4 text-blue-600" />;
+    case 'personal': return <User className="w-4 h-4 text-lime-400" />;
+    case 'summary': return <FileText className="w-4 h-4 text-lime-400" />;
+    case 'experience': return <Briefcase className="w-4 h-4 text-lime-400" />;
+    case 'education': return <GraduationCap className="w-4 h-4 text-lime-400" />;
+    case 'skills': return <Wrench className="w-4 h-4 text-lime-400" />;
+    case 'projects': return <FolderGit2 className="w-4 h-4 text-lime-400" />;
+    case 'certifications': return <Award className="w-4 h-4 text-lime-400" />;
+    case 'languages': return <LangIcon className="w-4 h-4 text-lime-400" />;
+    default: return <Layers className="w-4 h-4 text-lime-400" />;
   }
 };
 
@@ -142,12 +142,12 @@ const SortableSectionCard: React.FC<SectionCardProps> = ({ meta, isOpen, onToggl
     <div
       ref={setNodeRef}
       style={style}
-      className={`border rounded-xl transition-all duration-150 overflow-hidden ${
+      className={`border rounded-2xl transition-all duration-150 overflow-hidden ${
         isOpen
-          ? 'bg-white border-blue-200/90 shadow-xs'
+          ? 'bg-[#12161E] border-lime-500/40 shadow-[0_0_20px_rgba(163,230,53,0.1)]'
           : meta.enabled 
-            ? 'bg-white/90 border-slate-200 hover:border-slate-300 hover:bg-white' 
-            : 'bg-slate-50 border-slate-200/60 opacity-60'
+            ? 'bg-[#12161E]/80 border-white/[0.08] hover:border-white/[0.16] hover:bg-[#12161E]' 
+            : 'bg-[#090C10] border-white/[0.04] opacity-50'
       }`}
     >
       {/* Section Header Strip */}
@@ -157,30 +157,32 @@ const SortableSectionCard: React.FC<SectionCardProps> = ({ meta, isOpen, onToggl
             type="button"
             {...attributes}
             {...listeners}
-            className="cursor-grab active:cursor-grabbing p-1 text-slate-400 hover:text-slate-600 rounded touch-none"
+            className="cursor-grab active:cursor-grabbing p-1 text-zinc-500 hover:text-zinc-300 rounded touch-none"
             title="Drag to reorder section"
           >
             <GripVertical className="w-3.5 h-3.5" />
           </button>
           
           <div className="flex items-center gap-2.5 cursor-pointer flex-1 min-w-0" onClick={onToggleOpen}>
-            <div className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 ${
-              isOpen ? 'bg-blue-50 text-blue-600' : 'bg-slate-100 text-slate-600'
+            <div className={`w-7 h-7 rounded-xl flex items-center justify-center shrink-0 border ${
+              isOpen 
+                ? 'bg-[#090B0E] border-lime-500/30 text-lime-400' 
+                : 'bg-[#090B0E] border-white/[0.08] text-zinc-400'
             }`}>
               {getSectionIcon(meta.type)}
             </div>
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2">
-                <span className="text-xs font-bold text-slate-800">
+                <span className="text-xs font-mono font-bold text-zinc-100">
                   {meta.title}
                 </span>
                 {!meta.enabled && (
-                  <span className="text-[9px] uppercase font-bold text-slate-400 bg-slate-100 px-1.5 py-0.5 rounded">
+                  <span className="text-[9px] uppercase font-mono font-bold text-zinc-500 bg-[#090B0E] px-1.5 py-0.5 rounded border border-white/[0.06]">
                     Hidden
                   </span>
                 )}
               </div>
-              <p className="text-[11px] text-slate-400 truncate">
+              <p className="text-[11px] font-mono text-zinc-400 truncate">
                 {getSectionSummary()}
               </p>
             </div>
@@ -191,8 +193,8 @@ const SortableSectionCard: React.FC<SectionCardProps> = ({ meta, isOpen, onToggl
           <button
             type="button"
             onClick={onToggleEnabled}
-            className={`p-1.5 rounded-md text-xs transition-colors ${
-              meta.enabled ? 'text-slate-400 hover:text-slate-600' : 'text-slate-400 hover:text-blue-600'
+            className={`p-1.5 rounded-lg text-xs transition-colors ${
+              meta.enabled ? 'text-zinc-400 hover:text-white' : 'text-zinc-500 hover:text-lime-400'
             }`}
             title={meta.enabled ? 'Hide section from resume' : 'Show section'}
           >
@@ -201,8 +203,8 @@ const SortableSectionCard: React.FC<SectionCardProps> = ({ meta, isOpen, onToggl
           <button
             type="button"
             onClick={onToggleOpen}
-            className={`p-1.5 rounded-md transition-colors ${
-              isOpen ? 'text-blue-600 bg-blue-50' : 'text-slate-400 hover:text-slate-600'
+            className={`p-1.5 rounded-lg transition-colors ${
+              isOpen ? 'text-lime-400 bg-lime-950/40 border border-lime-500/30' : 'text-zinc-400 hover:text-white'
             }`}
           >
             {isOpen ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
@@ -212,7 +214,7 @@ const SortableSectionCard: React.FC<SectionCardProps> = ({ meta, isOpen, onToggl
 
       {/* Expanded Section Form */}
       {isOpen && (
-        <div className="p-4 pt-1 border-t border-slate-100 animate-in fade-in duration-100">
+        <div className="p-4 pt-3 border-t border-white/[0.08] bg-[#0E1218]/50 animate-in fade-in duration-100">
           {renderSectionContent()}
         </div>
       )}
@@ -288,21 +290,21 @@ export const SectionList: React.FC = () => {
         <button
           type="button"
           onClick={() => handleAddCustom()}
-          className="w-full py-2.5 border border-dashed border-slate-300 hover:border-blue-500 hover:bg-blue-50/40 rounded-xl text-xs font-semibold text-slate-700 hover:text-blue-600 flex items-center justify-center gap-1.5 transition-all shadow-2xs"
+          className="w-full py-2.5 border border-dashed border-white/[0.15] hover:border-lime-500/50 hover:bg-lime-950/20 rounded-2xl text-xs font-mono font-bold text-zinc-300 hover:text-lime-400 flex items-center justify-center gap-1.5 transition-all shadow-[inset_0_1px_2px_rgba(0,0,0,0.5)]"
         >
-          <Plus className="w-3.5 h-3.5 text-blue-600" />
+          <Plus className="w-3.5 h-3.5 text-lime-400" />
           <span>Add Custom Section</span>
         </button>
 
-        {/* FlowCV-style Quick Section Preset Chips */}
+        {/* Quick Section Preset Chips */}
         <div className="flex items-center justify-center gap-1.5 flex-wrap pt-0.5">
-          <span className="text-[10px] text-slate-400 font-medium">Quick Add:</span>
+          <span className="text-[10px] text-zinc-500 font-mono">Quick Add:</span>
           {['Publications', 'Volunteering', 'Awards & Honors'].map((chip) => (
             <button
               key={chip}
               type="button"
               onClick={() => handleAddCustom(chip)}
-              className="text-[10px] px-2 py-0.5 bg-slate-100 hover:bg-blue-50 hover:text-blue-700 text-slate-600 rounded-md transition-colors"
+              className="text-[10px] font-mono px-2 py-0.5 bg-[#12161E] hover:bg-[#1A202C] hover:text-lime-400 text-zinc-400 rounded-lg border border-white/[0.08] transition-colors"
             >
               + {chip}
             </button>

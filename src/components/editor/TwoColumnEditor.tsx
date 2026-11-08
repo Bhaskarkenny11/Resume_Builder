@@ -35,45 +35,45 @@ export const TwoColumnEditor: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col h-screen overflow-hidden bg-slate-50 text-slate-900 relative">
+    <div className="flex flex-col h-screen overflow-hidden bg-[#0A0D12] text-zinc-100 relative selection:bg-lime-400 selection:text-black">
       {/* Top Header */}
       <EditorHeader onDownloadPdf={handleDownloadPdf} isGeneratingPdf={isGeneratingPdf} />
 
-      {/* Main Two-Column Layout (FlowCV Pattern with responsive mobile/tablet tab switching) */}
+      {/* Main Two-Column Layout (Tactile Avionics Workspace) */}
       <div className="flex-1 flex flex-col lg:flex-row overflow-hidden relative">
         {/* Left Column: Form Inputs or Design Controls */}
         <section
           aria-label="Resume Editor Panel"
-          className={`w-full lg:w-[46%] xl:w-[44%] h-full overflow-y-auto border-r border-slate-200 bg-slate-50/60 p-4 sm:p-6 flex-col ${
+          className={`w-full lg:w-[46%] xl:w-[43%] h-full overflow-y-auto border-r border-white/[0.08] bg-[#0E1218] p-4 sm:p-6 flex-col ${
             mobileTab === 'editor' ? 'flex' : 'hidden lg:flex'
           }`}
         >
-          <div className="max-w-xl mx-auto w-full flex-1 flex flex-col space-y-4 pb-20 lg:pb-0">
-            {/* Clean Segmented Tab Switcher (FlowCV Pattern) */}
-            <div className="bg-slate-200/70 p-1 rounded-xl flex items-center shrink-0">
+          <div className="max-w-2xl mx-auto w-full flex-1 flex flex-col space-y-4 pb-20 lg:pb-0">
+            {/* Recessed Avionics Segmented Tab Switcher */}
+            <div className="bg-[#090C10] p-1.5 rounded-2xl border border-white/[0.08] shadow-[inset_0_2px_6px_rgba(0,0,0,0.85)] flex items-center shrink-0 gap-1">
               <button
                 type="button"
                 onClick={() => setEditorTab('content')}
-                className={`flex-1 py-1.5 px-3 rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 transition-all ${
+                className={`flex-1 py-2 px-3 rounded-xl text-xs font-mono font-bold flex items-center justify-center gap-2 transition-all ${
                   editorTab === 'content'
-                    ? 'bg-white text-slate-900 shadow-2xs font-bold'
-                    : 'text-slate-600 hover:text-slate-900'
+                    ? 'bg-[#181D26] text-lime-400 border border-lime-500/30 shadow-[0_0_15px_rgba(163,230,53,0.2)]'
+                    : 'text-zinc-400 hover:text-white border border-transparent'
                 }`}
               >
-                <FileText className="w-3.5 h-3.5 text-blue-600" />
-                <span>Content</span>
+                <FileText className="w-3.5 h-3.5" />
+                <span>CONTENT SPEC</span>
               </button>
               <button
                 type="button"
                 onClick={() => setEditorTab('design')}
-                className={`flex-1 py-1.5 px-3 rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 transition-all ${
+                className={`flex-1 py-2 px-3 rounded-xl text-xs font-mono font-bold flex items-center justify-center gap-2 transition-all ${
                   editorTab === 'design'
-                    ? 'bg-white text-slate-900 shadow-2xs font-bold'
-                    : 'text-slate-600 hover:text-slate-900'
+                    ? 'bg-[#181D26] text-lime-400 border border-lime-500/30 shadow-[0_0_15px_rgba(163,230,53,0.2)]'
+                    : 'text-zinc-400 hover:text-white border border-transparent'
                 }`}
               >
-                <Sliders className="w-3.5 h-3.5 text-blue-600" />
-                <span>Design & Style</span>
+                <Sliders className="w-3.5 h-3.5" />
+                <span>DESIGN & STYLE</span>
               </button>
             </div>
 
@@ -82,7 +82,7 @@ export const TwoColumnEditor: React.FC = () => {
               {editorTab === 'content' ? (
                 <SectionList />
               ) : (
-                <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-2xs">
+                <div className="bg-[#12161E] border border-white/[0.08] rounded-2xl p-5 shadow-[inset_0_1px_1px_rgba(255,255,255,0.06),0_10px_25px_rgba(0,0,0,0.5)]">
                   <StyleControls />
                 </div>
               )}
@@ -93,22 +93,22 @@ export const TwoColumnEditor: React.FC = () => {
         {/* Right Column: Live Scaled Canvas Preview */}
         <section
           aria-label="Live Canvas Preview"
-          className={`w-full lg:w-[54%] xl:w-[56%] h-full flex-col bg-slate-200/50 relative overflow-hidden ${
+          className={`w-full lg:w-[54%] xl:w-[57%] h-full flex-col bg-[#07090D] relative overflow-hidden ${
             mobileTab === 'preview' ? 'flex' : 'hidden lg:flex'
           }`}
         >
           <ResumePreviewContainer onOpenDesignTab={handleOpenDesignTab} />
         </section>
 
-        {/* Floating Mobile/Tablet Mode Switcher (Apple Acrylic Glass Capsule) */}
-        <div className="lg:hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-40 bg-slate-950/85 backdrop-blur-2xl border border-white/20 p-1.5 rounded-2xl shadow-2xl flex items-center gap-1.5">
+        {/* Floating Mobile/Tablet Mode Switcher */}
+        <div className="lg:hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-40 bg-[#0E1218]/90 backdrop-blur-2xl border border-white/20 p-1.5 rounded-2xl shadow-2xl flex items-center gap-1.5">
           <button
             type="button"
             onClick={() => setMobileTab('editor')}
-            className={`px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all active:scale-95 ${
+            className={`px-3.5 py-2 rounded-xl text-xs font-mono font-bold flex items-center gap-1.5 transition-all active:scale-95 ${
               mobileTab === 'editor'
-                ? 'apple-primary-btn text-white shadow-md'
-                : 'text-slate-300 hover:text-white'
+                ? 'bg-lime-400 text-black shadow-md'
+                : 'text-zinc-400 hover:text-white'
             }`}
           >
             <Edit3 className="w-3.5 h-3.5" />
@@ -118,10 +118,10 @@ export const TwoColumnEditor: React.FC = () => {
           <button
             type="button"
             onClick={() => setMobileTab('preview')}
-            className={`px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all active:scale-95 ${
+            className={`px-3.5 py-2 rounded-xl text-xs font-mono font-bold flex items-center gap-1.5 transition-all active:scale-95 ${
               mobileTab === 'preview'
-                ? 'apple-primary-btn text-white shadow-md'
-                : 'text-slate-300 hover:text-white'
+                ? 'bg-lime-400 text-black shadow-md'
+                : 'text-zinc-400 hover:text-white'
             }`}
           >
             <Eye className="w-3.5 h-3.5" />

@@ -249,8 +249,8 @@ export const DashboardView: React.FC = () => {
       />
 
       {/* 1. TOP AVIONICS APP HEADER WITH CLIENT-SIDE STATUS INDICATOR */}
-      <header className="sticky top-0 z-30 bg-[#0E1218]/90 backdrop-blur-xl border-b border-white/[0.08] px-4 sm:px-8 py-3 shadow-[0_4px_25px_rgba(0,0,0,0.7)]">
-        <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
+      <header className="sticky top-0 z-30 bg-[#0E1218]/90 backdrop-blur-xl border-b border-white/[0.08] px-4 sm:px-8 xl:px-12 py-3 shadow-[0_4px_25px_rgba(0,0,0,0.7)]">
+        <div className="w-full max-w-[1920px] mx-auto flex items-center justify-between gap-4">
           {/* Left: Tactical Hardware Logo & Client-side status indicator */}
           <div 
             onClick={handleLogoClick}
@@ -353,7 +353,7 @@ export const DashboardView: React.FC = () => {
       </header>
 
       {/* 2. MAIN COCKPIT DASHBOARD BODY */}
-      <main className="max-w-7xl mx-auto w-full px-4 sm:px-8 py-8 flex-1 relative z-10">
+      <main className="w-full max-w-[1920px] mx-auto px-4 sm:px-8 xl:px-12 py-8 flex-1 relative z-10">
         {/* HERO TITLE & DUAL VIEW SWITCHER */}
         <div className="mb-8">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-6 border-b border-white/[0.08]">
@@ -486,9 +486,9 @@ export const DashboardView: React.FC = () => {
           )}
         </div>
 
-        {/* 3. MULTI-ROW RESPONSIVE GRID LAYOUT (grid-cols-1 md:grid-cols-2 xl:grid-cols-3) */}
+        {/* 3. MULTI-ROW RESPONSIVE GRID LAYOUT (Full-width grid) */}
         {dashboardView === 'templates' ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 sm:gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-6 sm:gap-7">
             {filteredTemplates.map((template: TemplateConfig) => (
               <AvionicsTemplateCard
                 key={template.id}
@@ -500,7 +500,7 @@ export const DashboardView: React.FC = () => {
           </div>
         ) : (
           /* SAVED RESUMES AVIONICS ARCHIVE GRID */
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 sm:gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-6 sm:gap-7">
             {/* Create New Flight Card */}
             <div
               onClick={() => handleCreateNew()}

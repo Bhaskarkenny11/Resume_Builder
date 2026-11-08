@@ -130,32 +130,37 @@ export const UploadModal: React.FC = () => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-150">
-      <div className="bg-white rounded-2xl shadow-2xl max-w-xl w-full border border-slate-200 overflow-hidden flex flex-col max-h-[90vh]">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-xl animate-in fade-in duration-150">
+      <div 
+        className="bg-[#12161E] rounded-[32px] shadow-2xl max-w-xl w-full border border-white/[0.08] overflow-hidden flex flex-col max-h-[90vh]"
+        style={{
+          boxShadow: 'inset 0 1px 1px rgba(255, 255, 255, 0.15), inset 0 -2px 5px rgba(0, 0, 0, 0.8), 0 25px 50px -12px rgba(0, 0, 0, 0.85)',
+        }}
+      >
         {/* Header */}
-        <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
+        <div className="px-6 py-4 border-b border-white/[0.08] bg-[#0E1218] flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center">
-              <Sparkles className="w-4 h-4" />
+            <div className="w-8 h-8 rounded-xl bg-[#090B0E] border border-white/[0.08] text-lime-400 flex items-center justify-center shadow-[inset_0_1px_3px_rgba(0,0,0,0.8)]">
+              <Sparkles className="w-4 h-4 text-lime-400" />
             </div>
             <div>
-              <h3 className="text-base font-bold text-slate-800">Client-Side Resume Scanner</h3>
-              <p className="text-xs text-slate-500">Extracts structure & keywords locally without server uploads</p>
+              <h3 className="text-base font-bold text-white font-mono tracking-tight">Client-Side Resume Scanner</h3>
+              <p className="text-xs text-zinc-400 font-mono">100% In-Browser AST Parser // Zero Network Telemetry</p>
             </div>
           </div>
           <button
             onClick={handleClose}
-            className="p-1 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100"
+            className="p-1.5 rounded-xl text-zinc-400 hover:text-white hover:bg-white/[0.08] transition-colors"
           >
-            <X className="w-5 h-5" />
+            <X className="w-4 h-4" />
           </button>
         </div>
 
         {/* Modal Body */}
         <div className="p-6 overflow-y-auto space-y-4">
           {error && (
-            <div className="p-3 bg-rose-50 border border-rose-200 rounded-xl text-xs text-rose-700 flex items-center gap-2">
-              <AlertCircle className="w-4 h-4 shrink-0" />
+            <div className="p-3 bg-rose-950/40 border border-rose-800/60 rounded-xl text-xs text-rose-300 font-mono flex items-center gap-2">
+              <AlertCircle className="w-4 h-4 shrink-0 text-rose-400" />
               <span>{error}</span>
             </div>
           )}
@@ -166,10 +171,10 @@ export const UploadModal: React.FC = () => {
             onDragLeave={() => setIsDragging(false)}
             onDrop={handleDrop}
             onClick={() => fileInputRef.current?.click()}
-            className={`border-2 border-dashed rounded-2xl p-8 text-center cursor-pointer transition-all ${
+            className={`border-2 border-dashed rounded-2xl p-8 text-center cursor-pointer transition-all shadow-[inset_0_2px_8px_rgba(0,0,0,0.8)] ${
               isDragging
-                ? 'border-indigo-500 bg-indigo-50/50 scale-[0.99]'
-                : 'border-slate-200 hover:border-indigo-400 hover:bg-slate-50/60'
+                ? 'border-lime-500 bg-lime-950/20 scale-[0.99]'
+                : 'border-white/[0.12] bg-[#090C10] hover:border-lime-500/50 hover:bg-[#0E1218]'
             }`}
           >
             <input
@@ -182,52 +187,52 @@ export const UploadModal: React.FC = () => {
                 if (f) handleFileProcess(f);
               }}
             />
-            <div className="w-12 h-12 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center mx-auto mb-3">
+            <div className="w-12 h-12 rounded-2xl bg-[#12161E] border border-white/[0.08] text-lime-400 flex items-center justify-center mx-auto mb-3 shadow-[0_0_15px_rgba(163,230,53,0.2)]">
               {isProcessing ? (
-                <RefreshCw className="w-6 h-6 animate-spin" />
+                <RefreshCw className="w-6 h-6 animate-spin text-lime-400" />
               ) : (
-                <UploadCloud className="w-6 h-6" />
+                <UploadCloud className="w-6 h-6 text-lime-400" />
               )}
             </div>
-            <h4 className="text-sm font-semibold text-slate-800">
-              {file ? file.name : 'Drag & drop your resume (.PDF or .DOCX)'}
+            <h4 className="text-sm font-bold text-white font-mono">
+              {file ? file.name : 'DRAG & DROP RESUME (.PDF OR .DOCX)'}
             </h4>
-            <p className="text-xs text-slate-500 mt-1">
-              Parsed 100% in-browser via <code className="font-mono text-indigo-600">pdfjs-dist</code> and <code className="font-mono text-indigo-600">mammoth</code>
+            <p className="text-xs text-zinc-400 mt-1 font-mono">
+              Engineered via <code className="text-lime-400 font-mono">pdfjs-dist</code> & <code className="text-lime-400 font-mono">mammoth</code>
             </p>
           </div>
 
           {/* Extracted Preview */}
           {parsedData && (
-            <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-3 animate-in fade-in duration-200">
-              <div className="flex items-center gap-2 text-xs font-bold text-emerald-700">
-                <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                <span>Successfully Parsed Schema</span>
+            <div className="bg-[#090C10] border border-white/[0.08] rounded-2xl p-4 space-y-3 animate-in fade-in duration-200 shadow-[inset_0_2px_6px_rgba(0,0,0,0.8)]">
+              <div className="flex items-center gap-2 text-xs font-mono font-bold text-emerald-400">
+                <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                <span>PARSED SCHEMA VERIFIED // READY FOR FLIGHT</span>
               </div>
 
-              <div className="grid grid-cols-2 gap-3 text-xs">
+              <div className="grid grid-cols-2 gap-3 text-xs font-mono">
                 <div>
-                  <span className="text-slate-400 block text-[10px] uppercase font-semibold">Candidate Name</span>
-                  <span className="font-medium text-slate-800">{parsedData.personal.fullName || 'Not detected'}</span>
+                  <span className="text-zinc-500 block text-[10px] uppercase font-bold">Candidate Name</span>
+                  <span className="font-semibold text-white">{parsedData.personal.fullName || 'Not detected'}</span>
                 </div>
                 <div>
-                  <span className="text-slate-400 block text-[10px] uppercase font-semibold">Detected Location</span>
-                  <span className="font-medium text-slate-800">{parsedData.personal.location || 'Not detected'}</span>
+                  <span className="text-zinc-500 block text-[10px] uppercase font-bold">Detected Location</span>
+                  <span className="font-semibold text-white">{parsedData.personal.location || 'Not detected'}</span>
                 </div>
                 <div>
-                  <span className="text-slate-400 block text-[10px] uppercase font-semibold">Detected Email</span>
-                  <span className="font-medium text-slate-800">{parsedData.personal.email || 'Not detected'}</span>
+                  <span className="text-zinc-500 block text-[10px] uppercase font-bold">Detected Email</span>
+                  <span className="font-semibold text-white">{parsedData.personal.email || 'Not detected'}</span>
                 </div>
                 <div>
-                  <span className="text-slate-400 block text-[10px] uppercase font-semibold">Experience & Education</span>
-                  <span className="font-medium text-slate-800">{parsedData.experience.length} roles • {parsedData.education.length} degrees</span>
+                  <span className="text-zinc-500 block text-[10px] uppercase font-bold">Experience & Education</span>
+                  <span className="font-semibold text-white">{parsedData.experience.length} roles • {parsedData.education.length} degrees</span>
                 </div>
               </div>
 
               {parsedData.summary && (
-                <div className="pt-2 border-t border-slate-200/60">
-                  <span className="text-slate-400 block text-[10px] uppercase font-semibold mb-0.5">Summary Preview</span>
-                  <p className="text-slate-600 text-xs line-clamp-2 leading-relaxed">
+                <div className="pt-2 border-t border-white/[0.08]">
+                  <span className="text-zinc-500 block text-[10px] font-mono uppercase font-bold mb-0.5">Summary Preview</span>
+                  <p className="text-zinc-300 text-xs line-clamp-2 leading-relaxed">
                     {parsedData.summary}
                   </p>
                 </div>
@@ -237,14 +242,14 @@ export const UploadModal: React.FC = () => {
         </div>
 
         {/* Footer */}
-        <div className="px-6 py-4 bg-slate-50 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <span className="text-[11px] text-slate-400">
-            No document leaves your device • 100% Client-Side
+        <div className="px-6 py-4 bg-[#0E1218] border-t border-white/[0.08] flex flex-col sm:flex-row items-center justify-between gap-3">
+          <span className="text-[11px] font-mono text-zinc-500">
+            100% Client-Side • Zero Cloud Uploads
           </span>
           <div className="flex items-center gap-2 flex-wrap justify-end">
             <button
               onClick={handleClose}
-              className="px-3.5 py-2 text-xs font-medium text-slate-600 hover:bg-slate-200 rounded-xl transition-colors"
+              className="px-3.5 py-2 text-xs font-mono text-zinc-400 hover:text-white rounded-xl transition-colors"
             >
               Cancel
             </button>
@@ -252,19 +257,23 @@ export const UploadModal: React.FC = () => {
               <button
                 onClick={handleUpdateCurrentResume}
                 disabled={!parsedData || isProcessing}
-                className="px-4 py-2 bg-slate-800 hover:bg-slate-900 disabled:opacity-40 text-white text-xs font-semibold rounded-xl shadow-xs transition-all flex items-center gap-1.5"
+                className="px-4 py-2 bg-[#181D26] hover:bg-[#202734] disabled:opacity-40 text-zinc-200 text-xs font-mono font-semibold rounded-xl border border-white/[0.08] transition-all flex items-center gap-1.5"
                 title="Populate current open resume with parsed data"
               >
-                <span>Update Current Resume</span>
+                <span>Update Current</span>
               </button>
             )}
             <button
               onClick={handleImportToEditor}
               disabled={!parsedData || isProcessing}
-              className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-40 text-white text-xs font-semibold rounded-xl shadow-md transition-all flex items-center gap-1.5"
+              className="relative h-9 px-5 rounded-full flex items-center gap-2 font-mono font-black text-xs uppercase tracking-wider text-black select-none transition-all active:scale-95 disabled:opacity-40 shadow-md cursor-pointer"
+              style={{
+                background: 'linear-gradient(180deg, #c4f934 0%, #84cc16 100%)',
+                boxShadow: '0 0 18px rgba(163, 230, 53, 0.65), inset 0 1px 1px rgba(255, 255, 255, 0.7), inset 0 -1px 2px rgba(0, 0, 0, 0.4)',
+              }}
             >
-              <span>{currentResume ? 'Import as New Resume' : 'Import to Editor'}</span>
-              <ArrowRight className="w-3.5 h-3.5" />
+              <span>{currentResume ? 'Import As New' : 'Import To Editor'}</span>
+              <ArrowRight className="w-3.5 h-3.5 text-black stroke-[3]" />
             </button>
           </div>
         </div>
