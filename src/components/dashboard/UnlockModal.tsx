@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 import { useResumeStore } from '../../store/useResumeStore';
-import { verifyPin } from '../../db';
-import { Lock, KeyRound, ShieldAlert } from 'lucide-react';
+import { verifyPin, exportDatabaseBackup } from '../../db';
+import { Lock, KeyRound, ShieldAlert, ArrowLeft, Download, ShieldCheck } from 'lucide-react';
 
 export const UnlockModal: React.FC = () => {
-  const { showUnlockModal, security, unlockWorkspace } = useResumeStore();
+  const { showUnlockModal, security, unlockWorkspace, resetSecurityPin } = useResumeStore();
   const [pin, setPin] = useState('');
   const [error, setError] = useState(false);
   const [attempts, setAttempts] = useState(0);
+  const [showResetView, setShowResetView] = useState(false);
+  const [isExporting, setIsExporting] = useState(false);
 
   if (!showUnlockModal || !security.pinHash) return null;
 
@@ -27,6 +29,34 @@ export const UnlockModal: React.FC = () => {
     }
   };
 
+  const handleEmergencyBackup = async () => {
+    try {
+      setIsExporting(true);
+      const json = await exportDatabaseBackup();
+      const blob = new Blob([json], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `ProFile_Emergency_Backup_${new Date().toISOString().slice(0, 10)}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error('Backup error:', err);
+      alert('Failed to export emergency backup.');
+    } finally {
+      setIsExporting(false);
+    }
+  };
+
+  const handleConfirmReset = async () => {
+    await resetSecurityPin();
+    setShowResetView(false);
+    setError(false);
+    setPin('');
+  };
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-xl animate-in fade-in duration-200">
       <div 
@@ -35,48 +65,129 @@ export const UnlockModal: React.FC = () => {
           boxShadow: 'inset 0 1px 1px rgba(255, 255, 255, 0.15), inset 0 -2px 5px rgba(0, 0, 0, 0.8), 0 25px 50px -12px rgba(0, 0, 0, 0.85)',
         }}
       >
-        <div className="w-14 h-14 bg-[#090B0E] border border-white/[0.08] text-lime-400 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-[inset_0_2px_6px_rgba(0,0,0,0.85),0_0_15px_rgba(163,230,53,0.2)]">
-          <Lock className="w-7 h-7 text-lime-400" />
-        </div>
+        {!showResetView ? (
+          /* Normal PIN Unlock View */
+          <>
+            <div className="w-14 h-14 bg-[#090B0E] border border-white/[0.08] text-lime-400 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-[inset_0_2px_6px_rgba(0,0,0,0.85),0_0_15px_rgba(163,230,53,0.2)]">
+              <Lock className="w-7 h-7 text-lime-400" />
+            </div>
 
-        <h3 className="text-lg font-bold font-mono text-white tracking-tight">
-          {security.workspaceName || 'Local Workspace Locked'}
-        </h3>
-        <p className="text-xs text-zinc-400 font-mono mt-1 mb-5">
-          Enter 4-digit security PIN to unlock workspace.
-        </p>
+            <h3 className="text-lg font-bold font-mono text-white tracking-tight">
+              {security.workspaceName || 'Local Workspace Locked'}
+            </h3>
+            <p className="text-xs text-zinc-400 font-mono mt-1 mb-5">
+              Enter 4-digit security PIN to unlock workspace.
+            </p>
 
-        {error && (
-          <div className="mb-4 p-2.5 bg-rose-950/40 border border-rose-800/60 rounded-xl text-xs text-rose-300 font-mono flex items-center justify-center gap-1.5 animate-shake">
-            <ShieldAlert className="w-4 h-4 text-rose-400" />
-            <span>Incorrect PIN. Please retry ({attempts} failed).</span>
+            {error && (
+              <div className="mb-4 p-2.5 bg-rose-950/40 border border-rose-800/60 rounded-xl text-xs text-rose-300 font-mono flex items-center justify-center gap-1.5 animate-shake">
+                <ShieldAlert className="w-4 h-4 text-rose-400" />
+                <span>Incorrect PIN. Please retry ({attempts} failed).</span>
+              </div>
+            )}
+
+            <form onSubmit={handleUnlock} className="space-y-4">
+              <input
+                type="password"
+                maxLength={4}
+                autoFocus
+                autoComplete="off"
+                name="workspace-pin"
+                value={pin}
+                onChange={(e) => setPin(e.target.value.replace(/\D/g, ''))}
+                placeholder="••••"
+                style={{ colorScheme: 'dark' }}
+                className="w-44 mx-auto text-center tracking-[0.5em] text-2xl font-mono py-2.5 bg-[#090C10] border border-white/[0.1] rounded-xl text-white focus:outline-none focus:border-lime-500/50 focus:shadow-[0_0_15px_rgba(163,230,53,0.25)] shadow-[inset_0_2px_6px_rgba(0,0,0,0.8)] block"
+              />
+
+              <button
+                type="submit"
+                disabled={pin.length < 4}
+                className="w-full h-11 rounded-full flex items-center justify-center gap-2 font-mono font-black text-xs uppercase tracking-wider text-black select-none transition-all active:scale-95 disabled:opacity-40 cursor-pointer"
+                style={{
+                  background: 'linear-gradient(180deg, #c4f934 0%, #84cc16 100%)',
+                  boxShadow: '0 0 20px rgba(163, 230, 53, 0.65), inset 0 1px 1px rgba(255, 255, 255, 0.7), inset 0 -1px 2px rgba(0, 0, 0, 0.4)',
+                }}
+              >
+                <KeyRound className="w-4 h-4 text-black stroke-[2.5]" />
+                Unlock Workspace
+              </button>
+            </form>
+
+            <div className="mt-4 pt-3 border-t border-white/[0.08]">
+              <button
+                type="button"
+                onClick={() => setShowResetView(true)}
+                className="text-xs font-mono text-zinc-400 hover:text-lime-400 transition-colors cursor-pointer"
+              >
+                Forgot your PIN?
+              </button>
+            </div>
+          </>
+        ) : (
+          /* Forgot PIN / Reset Security Recovery View */
+          <div className="space-y-4 animate-in fade-in duration-150">
+            <div className="w-14 h-14 bg-[#090B0E] border border-white/[0.08] text-amber-400 rounded-2xl flex items-center justify-center mx-auto mb-2 shadow-[inset_0_2px_6px_rgba(0,0,0,0.85)]">
+              <KeyRound className="w-7 h-7 text-amber-400" />
+            </div>
+
+            <h3 className="text-base font-bold font-mono text-white tracking-tight">
+              Reset Security PIN
+            </h3>
+
+            <p className="text-xs text-zinc-400 font-mono leading-relaxed text-left">
+              Because this app is <strong className="text-zinc-200">100% private</strong> and runs in your browser with zero remote accounts, your PIN is cryptographically hashed only on this device.
+            </p>
+
+            <div className="p-3 bg-[#090C10] border border-emerald-500/30 rounded-xl text-left shadow-[inset_0_1px_3px_rgba(0,0,0,0.8)]">
+              <div className="flex items-center gap-1.5 text-xs font-mono font-bold text-emerald-400 mb-1">
+                <ShieldCheck className="w-4 h-4 shrink-0 text-emerald-400" />
+                <span>Zero Data Loss Guarantee</span>
+              </div>
+              <p className="text-[11px] font-mono text-zinc-400 leading-relaxed">
+                Resetting your PIN removes the lock and lets you into your workspace. <span className="text-zinc-200 font-semibold">None of your resumes will be deleted</span>.
+              </p>
+            </div>
+
+            <div className="space-y-2 pt-1">
+              {/* Optional Emergency Backup */}
+              <button
+                type="button"
+                onClick={handleEmergencyBackup}
+                disabled={isExporting}
+                className="w-full py-2 px-3 rounded-xl bg-[#090C10] hover:bg-[#161B24] border border-white/[0.1] hover:border-white/[0.2] text-xs font-mono text-zinc-300 hover:text-white flex items-center justify-center gap-2 transition-all cursor-pointer shadow-[inset_0_1px_2px_rgba(0,0,0,0.5)]"
+                title="Download an emergency JSON backup of all your resumes to your device"
+              >
+                <Download className="w-3.5 h-3.5 text-lime-400" />
+                <span>{isExporting ? 'Exporting...' : 'Download Emergency Backup (.json)'}</span>
+              </button>
+
+              {/* Confirm Reset Button */}
+              <button
+                type="button"
+                onClick={handleConfirmReset}
+                className="w-full h-10 rounded-full flex items-center justify-center gap-2 font-mono font-black text-xs uppercase tracking-wider text-black select-none transition-all active:scale-95 cursor-pointer"
+                style={{
+                  background: 'linear-gradient(180deg, #c4f934 0%, #84cc16 100%)',
+                  boxShadow: '0 0 18px rgba(163, 230, 53, 0.6), inset 0 1px 1px rgba(255, 255, 255, 0.7)',
+                }}
+              >
+                <KeyRound className="w-3.5 h-3.5 text-black stroke-[2.5]" />
+                Reset PIN & Unlock
+              </button>
+
+              {/* Back to PIN input */}
+              <button
+                type="button"
+                onClick={() => setShowResetView(false)}
+                className="w-full py-1.5 text-xs font-mono text-zinc-500 hover:text-zinc-300 flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+              >
+                <ArrowLeft className="w-3.5 h-3.5" />
+                <span>Back to PIN Entry</span>
+              </button>
+            </div>
           </div>
         )}
-
-        <form onSubmit={handleUnlock} className="space-y-4">
-          <input
-            type="password"
-            maxLength={4}
-            autoFocus
-            value={pin}
-            onChange={(e) => setPin(e.target.value.replace(/\D/g, ''))}
-            placeholder="••••"
-            className="w-44 mx-auto text-center tracking-[0.5em] text-2xl font-mono py-2.5 bg-[#090C10] border border-white/[0.1] rounded-xl text-white focus:outline-none focus:border-lime-500/50 focus:shadow-[0_0_15px_rgba(163,230,53,0.25)] shadow-[inset_0_2px_6px_rgba(0,0,0,0.8)] block"
-          />
-
-          <button
-            type="submit"
-            disabled={pin.length < 4}
-            className="w-full h-11 rounded-full flex items-center justify-center gap-2 font-mono font-black text-xs uppercase tracking-wider text-black select-none transition-all active:scale-95 disabled:opacity-40 cursor-pointer"
-            style={{
-              background: 'linear-gradient(180deg, #c4f934 0%, #84cc16 100%)',
-              boxShadow: '0 0 20px rgba(163, 230, 53, 0.65), inset 0 1px 1px rgba(255, 255, 255, 0.7), inset 0 -1px 2px rgba(0, 0, 0, 0.4)',
-            }}
-          >
-            <KeyRound className="w-4 h-4 text-black stroke-[2.5]" />
-            Unlock Workspace
-          </button>
-        </form>
       </div>
     </div>
   );

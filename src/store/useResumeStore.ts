@@ -114,6 +114,7 @@ interface ResumeState {
   configureLocalProfile: (workspaceName: string, pinHash?: string) => Promise<void>;
   unlockWorkspace: () => void;
   lockWorkspace: () => void;
+  resetSecurityPin: () => Promise<void>;
 }
 
 export const useResumeStore = create<ResumeState>((set, get) => ({
@@ -1031,5 +1032,16 @@ export const useResumeStore = create<ResumeState>((set, get) => ({
     };
     await saveGlobalSettings({ security: patch });
     set({ security: patch, showUnlockModal: true });
+  },
+
+  resetSecurityPin: async () => {
+    const patch: LocalSecuritySettings = {
+      ...get().security,
+      pinHash: undefined,
+      isLocked: false,
+      unlockedAt: Date.now(),
+    };
+    await saveGlobalSettings({ security: patch });
+    set({ security: patch, showUnlockModal: false });
   },
 }));
