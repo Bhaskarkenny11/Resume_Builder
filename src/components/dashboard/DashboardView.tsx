@@ -346,7 +346,7 @@ export const DashboardView: React.FC = () => {
               }}
             >
               <Plus className="w-3.5 h-3.5 text-black stroke-[3]" />
-              <span>New Flight</span>
+              <span>New Resume</span>
             </button>
           </div>
         </div>
@@ -510,7 +510,7 @@ export const DashboardView: React.FC = () => {
                 <Plus className="w-6 h-6 stroke-[2.5]" />
               </div>
               <h3 className="text-sm font-bold text-white uppercase tracking-wider font-mono group-hover:text-lime-400 transition-colors">
-                Initialize New Flight Resume
+                Create New Resume
               </h3>
               <p className="text-xs text-zinc-400 mt-1.5 max-w-xs font-mono leading-relaxed">
                 Configure ATS-compliant resume or scan existing document.
