@@ -82,9 +82,7 @@ export const TwoColumnEditor: React.FC = () => {
               {editorTab === 'content' ? (
                 <SectionList />
               ) : (
-                <div className="bg-[#12161E] border border-white/[0.08] rounded-2xl p-5 shadow-[inset_0_1px_1px_rgba(255,255,255,0.06),0_10px_25px_rgba(0,0,0,0.5)]">
-                  <StyleControls />
-                </div>
+                <StyleControls />
               )}
             </div>
           </div>
